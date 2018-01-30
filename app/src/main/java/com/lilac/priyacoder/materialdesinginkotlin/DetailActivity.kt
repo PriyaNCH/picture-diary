@@ -8,12 +8,18 @@ import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
+<<<<<<< HEAD
 import com.lilac.priyacoder.materialdesinginkotlin.R.id.*
+=======
+>>>>>>> 068ec20288cae7de384bf8d1e194714fd61f1da3
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_detail.*
 import kotlinx.android.synthetic.main.activity_detail.view.*
 import java.io.File
+<<<<<<< HEAD
 import java.lang.reflect.Method
+=======
+>>>>>>> 068ec20288cae7de384bf8d1e194714fd61f1da3
 
 class DetailActivity : BaseActivity(){
 
