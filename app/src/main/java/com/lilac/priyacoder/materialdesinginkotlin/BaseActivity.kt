@@ -52,7 +52,7 @@ abstract class BaseActivity: AppCompatActivity() {
 
     fun displayFileChooser() {
         val folder = true
-        if (Build.VERSION.SDK_INT < 23) {
+        if (Build.VERSION.SDK_INT < 23 ) {
             if (folder) {
                 pickFolder()
             } else {
