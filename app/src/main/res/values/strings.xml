@@ -1,0 +1,12 @@
+<resources>
+  <string name="app_name">Around the world</string>
+  <string name="action_settings">Settings</string>
+  <string name="show_as_list">Show as list</string>
+  <string name="show_as_grid">Show as grid</string>
+  <string name="my_activities">MY ACTIVITIES</string>
+  <string name="file_browser">Browse Files</string>
+  <string name="directory_selected_label">Select a Directory</string>
+  <string name="none">None</string>
+  <string name="btn_choose">Choose</string>
+  <string name="blur_effect">blur_effect</string>
+</resources>
