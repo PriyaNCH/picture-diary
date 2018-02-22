@@ -30,7 +30,6 @@ abstract class BaseActivity: AppCompatActivity() {
     protected var showFileSelector = true
     protected var showGridToggle = true
 
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
@@ -52,11 +51,7 @@ abstract class BaseActivity: AppCompatActivity() {
 
     fun displayFileChooser() {
         val folder = true
-<<<<<<< HEAD
-        if (Build.VERSION.SDK_INT < 23 ) {
-=======
         if (Build.VERSION.SDK_INT < 23) {
->>>>>>> 068ec20288cae7de384bf8d1e194714fd61f1da3
             if (folder) {
                 pickFolder()
             } else {
