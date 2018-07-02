@@ -15,7 +15,8 @@ import kotlin.collections.HashMap
 /**
  * Created by 1021422 on 10/10/2017.
  */
-class ImageBucketsAdapter(private var context: Context,var imageData:HashMap<String,List<File>>) : RecyclerView.Adapter<ImageBucketsAdapter.ViewHolder>() {
+class ImageBucketsAdapter(private var context: Context,var imageData:HashMap<String,List<File>>)
+    : RecyclerView.Adapter<ImageBucketsAdapter.ViewHolder>() {
 
     lateinit var itemClickListener: OnItemClickListener
     lateinit var listOfMonth: MutableList<String>
@@ -65,7 +66,7 @@ class ImageBucketsAdapter(private var context: Context,var imageData:HashMap<Str
     }
 
     fun loadData() {
-        listOfMonth =  mutableListOf<String>()
+        listOfMonth =  mutableListOf()
         imageData.keys.forEach(Consumer { month ->
             run {
                 listOfMonth.add(month)
@@ -74,6 +75,5 @@ class ImageBucketsAdapter(private var context: Context,var imageData:HashMap<Str
 
         //sort list
         listOfMonth.sortWith(MonthComparator)
-
     }
 }

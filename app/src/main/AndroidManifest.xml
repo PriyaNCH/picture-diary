@@ -21,8 +21,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ImagesViewActivity"></activity>
-        <activity android:name=".DetailActivity"></activity>
+        <activity android:name=".ImagesViewActivity" />
+        <activity android:name=".DetailActivity" />
         <!--<activity android:name="net.rdrei.android.dirchooser.DirectoryChooserActivity"></activity>-->
 
     </application>

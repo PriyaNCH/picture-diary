@@ -8,7 +8,7 @@ class MonthComparator {
 
     companion object : Comparator<String> {
 
-        val months =  arrayOf("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec")
+        private val months =  arrayOf("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec")
 
         override fun compare(month1: String, month2: String): Int = when {
 

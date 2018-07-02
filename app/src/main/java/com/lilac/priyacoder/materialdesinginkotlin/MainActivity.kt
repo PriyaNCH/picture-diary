@@ -10,9 +10,9 @@ import java.io.File
 
 class MainActivity : BaseActivity() {
 
-    lateinit private var staggeredLayoutManager: StaggeredGridLayoutManager
+    private lateinit var staggeredLayoutManager: StaggeredGridLayoutManager
     private var isListView: Boolean = false
-    lateinit private var adapter: ImageBucketsAdapter
+    private lateinit var adapter: ImageBucketsAdapter
 
     private val onItemClickListener = object : ImageBucketsAdapter.OnItemClickListener {
         override fun onItemClick(view: View, imageMap: HashMap<String,List<File>>, monthCode: String) {
@@ -46,7 +46,6 @@ class MainActivity : BaseActivity() {
 
             adapter.setOnItemClickListener(onItemClickListener)
         } else {
-
             //Show file selection dialog
             displayFileChooser()
         }

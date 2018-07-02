@@ -20,15 +20,15 @@ import java.text.SimpleDateFormat
 /**
  * Created by 1021422 on 10/15/2017.
  */
-abstract class BaseActivity: AppCompatActivity() {
+abstract class BaseActivity : AppCompatActivity() {
 
-    lateinit protected var menu: Menu
+    protected lateinit var menu: Menu
     private val SDCARD_PERMISSION_FOLDER = 12
     private val SDCARD_PERMISSION_FILE = 123
     private val FOLDER_PICKER_CODE = 78
     private val FILE_PICKER_CODE = 786
-    protected var showFileSelector = true
-    protected var showGridToggle = true
+    private var showFileSelector = true
+    private var showGridToggle = true
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -41,6 +41,7 @@ abstract class BaseActivity: AppCompatActivity() {
         this.menu = menu
         return true
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
         if (id == R.id.file_browser) {
@@ -50,9 +51,8 @@ abstract class BaseActivity: AppCompatActivity() {
     }
 
     fun displayFileChooser() {
-        val folder = true
         if (Build.VERSION.SDK_INT < 23) {
-            if (folder) {
+            if (Constansts.IS_FOLDER) {
                 pickFolder()
             } else {
                 pickFile()
@@ -60,13 +60,13 @@ abstract class BaseActivity: AppCompatActivity() {
         } else
             if (storagePermissionAvailable()) {
 
-                if (folder) {
+                if (Constansts.IS_FOLDER) {
                     pickFolder()
                 } else {
                     pickFile()
                 }
             } else {
-                if (folder) {
+                if (Constansts.IS_FOLDER) {
                     ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), SDCARD_PERMISSION_FOLDER)
 
                 } else {
@@ -84,9 +84,9 @@ abstract class BaseActivity: AppCompatActivity() {
     fun pickFile() {
 
         val intent = Intent(this, FolderPicker::class.java)
-        intent.putExtra("title", "Select file to upload");
-        intent.putExtra("location", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath());
-        intent.putExtra("pickFiles", true);
+        intent.putExtra("title", "Select file to upload")
+        intent.putExtra("location", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).absolutePath)
+        intent.putExtra("pickFiles", true)
 
         startActivityForResult(intent, FILE_PICKER_CODE)
 
@@ -124,10 +124,10 @@ abstract class BaseActivity: AppCompatActivity() {
             val directory = File(folderLocation)
             val files: Array<File> = directory.listFiles()
 
-            for( imageFile in files){
+            for (imageFile in files) {
                 val month = df.format(imageFile.lastModified())
 
-                if(!monthImageMap.containsKey(month)) {
+                if (!monthImageMap.containsKey(month)) {
                     monthImageMap[month] = ArrayList()
                 }
                 (monthImageMap[month]!! as ArrayList).add(imageFile)
@@ -138,5 +138,4 @@ abstract class BaseActivity: AppCompatActivity() {
             startActivity(intent)
         }
     }
-
 }
