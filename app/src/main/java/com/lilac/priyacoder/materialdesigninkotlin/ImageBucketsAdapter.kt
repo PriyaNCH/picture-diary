@@ -1,6 +1,10 @@
-package com.lilac.priyacoder.materialdesinginkotlin
+package com.lilac.priyacoder.materialdesigninkotlin
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.support.v4.content.ContextCompat
+import android.support.v7.graphics.Palette
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -33,7 +37,7 @@ class ImageBucketsAdapter(private var context: Context,var imageData:HashMap<Str
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val month = listOfMonth[position]
-        val fileCount = imageData[month]?.size
+        val fileCount = imageData[month]!!.size
         holder.itemView.fileCount.text = fileCount.toString()
         holder.itemView.placeName.text = month
 
@@ -43,7 +47,7 @@ class ImageBucketsAdapter(private var context: Context,var imageData:HashMap<Str
 //        val options = BitmapFactory.Options()
 //        options.inPreferredConfig = Bitmap.Config.ARGB_8888
 //        val bitmap = BitmapFactory.decodeFile(imageFile.absolutePath, options)
-
+//
 //        Palette.from(bitmap).generate { palette ->
 //            val bgColor = palette.getMutedColor(ContextCompat.getColor(context, android.R.color.black))
 //            holder.itemView.placeNameHolder.setBackgroundColor(bgColor)
@@ -58,9 +62,12 @@ class ImageBucketsAdapter(private var context: Context,var imageData:HashMap<Str
         }
         override fun onClick(view: View) = itemClickListener.onItemClick(itemView, imageData, listOfMonth[adapterPosition])
     }
+
+    //Create an listener interface for the items in the RecyclerView
     interface OnItemClickListener {
         fun onItemClick(view: View, imageMap: HashMap<String,List<File>>, monthCode: String)
     }
+
     fun setOnItemClickListener(itemClickListener: OnItemClickListener) {
         this.itemClickListener = itemClickListener
     }
@@ -73,7 +80,7 @@ class ImageBucketsAdapter(private var context: Context,var imageData:HashMap<Str
             }
         })
 
-        //sort list
+        //sort list in the order of months starting with January ...
         listOfMonth.sortWith(MonthComparator)
     }
 }

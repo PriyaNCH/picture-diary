@@ -1,46 +1,50 @@
-package com.lilac.priyacoder.materialdesinginkotlin
+package com.lilac.priyacoder.materialdesigninkotlin
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.MenuItem
 import android.view.View
-import kotlinx.android.synthetic.main.images_view.*
+import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 
-/**
- * Created by 1021422 on 10/15/2017.
- */
-class ImagesViewActivity: BaseActivity() {
+class MainActivity : BaseActivity() {
 
+    private lateinit var staggeredLayoutManager: StaggeredGridLayoutManager
     private var isListView: Boolean = false
-    lateinit private var adapter: ImagesViewAdapter
-    lateinit private var staggeredLayoutManager: StaggeredGridLayoutManager
+    private lateinit var imageBucketAdapter: ImageBucketsAdapter
 
-    private val onItemClickListener = object : ImagesViewAdapter.OnItemClickListener {
-        override fun onItemClick(view: View, file: File) {
-            val intent = Intent(this@ImagesViewActivity,DetailActivity::class.java)
-            intent.putExtra("file",file)
+    private val onItemClickListener = object : ImageBucketsAdapter.OnItemClickListener {
+        override fun onItemClick(view: View, imageMap: HashMap<String,List<File>>, monthCode: String) {
+            val intent = Intent(this@MainActivity,ImagesViewActivity::class.java)
+            intent.putExtra("imageMap",imageMap)
+            intent.putExtra("monthCode",monthCode)
             startActivity(intent)
         }
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.images_view)
+        setContentView(R.layout.activity_main)
 
-        val monthCode = intent.getStringExtra("monthCode")
-        val imageMap: HashMap<String,List<File>> = intent.getSerializableExtra("imageMap") as HashMap<String, List<File>>
-        val listOfFiles: List<File>? = imageMap[monthCode]
+        val prefs = Prefs.getInstance(applicationContext)
+
+        prefs.getValues().getString(prefs.PREFERRED_FOLDER_KEY,null) ?: displayFileChooser()
+
+        val imageMap: HashMap<String, List<File>> = intent.getSerializableExtra("imageMap") as HashMap<String, List<File>>
 
         isListView = true
         staggeredLayoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
-        imagelist.layoutManager = staggeredLayoutManager
+        list.layoutManager = staggeredLayoutManager
 
-        adapter = ImagesViewAdapter(this, listOfFiles)
-        imagelist.adapter = adapter
+        imageBucketAdapter = ImageBucketsAdapter(this, imageMap)
+        imageBucketAdapter.loadData()
+        list.adapter = imageBucketAdapter
 
-        adapter.setOnItemClickListener(onItemClickListener)
+        imageBucketAdapter.setOnItemClickListener(onItemClickListener)
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
         if (id == R.id.action_toggle) {
@@ -74,3 +78,4 @@ class ImagesViewActivity: BaseActivity() {
         isListView = false
     }
 }
+

@@ -1,16 +1,8 @@
-package com.lilac.priyacoder.materialdesinginkotlin
+package com.lilac.priyacoder.materialdesigninkotlin
 
-//<<<<<<< HEAD
-//=======
-//>>>>>>> 068ec20288cae7de384bf8d1e194714fd61f1da3
-//<<<<<<< HEAD
 import android.animation.Animator
 import android.graphics.drawable.Animatable
-import android.opengl.Visibility
-import android.os.Build
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
@@ -18,14 +10,11 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_detail.*
 import java.io.File
 
-//=======
-//>>>>>>> 068ec20288cae7de384bf8d1e194714fd61f1da3
-
 class DetailActivity : BaseActivity(){
 
-    lateinit private var inputManager: InputMethodManager
-    lateinit private var todoList: ArrayList<String>
-    lateinit private var toDoAdapter: ArrayAdapter<*>
+    private lateinit var inputManager: InputMethodManager
+    private lateinit var todoList: ArrayList<String>
+    private lateinit var toDoAdapter: ArrayAdapter<*>
 
     private var imageFile: File? = null
     private var isEditMode: Boolean = false
@@ -34,28 +23,23 @@ class DetailActivity : BaseActivity(){
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_detail)
 
+    // Set this property to remove the Grid Toggle button in the app bar as it is not required
+    super.showGridToggle = false
+
     imageFile = intent!!.getSerializableExtra("file") as File
     loadPlace()
 
     placeTitle.maxLines = 1
     placeTitle.isSelected = true
 
-    submitButton.setOnClickListener({ view -> onClick(view) })
-    addButton.setOnClickListener({ view -> onClick(view) })
-}
+    submitButton.setOnClickListener { view -> onClick(view) }
+      addButton.setOnClickListener { view -> onClick(view) }
+  }
 
   private fun loadPlace() {
     placeTitle.text = imageFile?.name
     Picasso.with(this).load(imageFile).fit().centerCrop().into(placeImage)
   }
-
-    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        if(Build.VERSION.SDK_INT>11){
-            invalidateOptionsMenu()
-            menu!!.findItem(R.id.action_toggle).isVisible = false
-        }
-        return super.onPrepareOptionsMenu(menu)
-    }
 
   private fun onClick(view: View) {
       when(view.id){
@@ -114,6 +98,5 @@ class DetailActivity : BaseActivity(){
 //              (addButton.drawable as Animatable).start()
           }
       }
-
     }
 }

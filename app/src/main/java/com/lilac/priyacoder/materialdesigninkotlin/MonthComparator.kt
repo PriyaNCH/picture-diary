@@ -1,4 +1,4 @@
-package com.lilac.priyacoder.materialdesinginkotlin
+package com.lilac.priyacoder.materialdesigninkotlin
 
 /**
  * Created by 1021422 on 10/15/2017.

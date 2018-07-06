@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.lilac.priyacoder.materialdesinginkotlin">
+    package="com.lilac.priyacoder.materialdesigninkotlin">
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
@@ -23,7 +23,6 @@
         </activity>
         <activity android:name=".ImagesViewActivity" />
         <activity android:name=".DetailActivity" />
-        <!--<activity android:name="net.rdrei.android.dirchooser.DirectoryChooserActivity"></activity>-->
 
     </application>
 

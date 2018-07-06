@@ -1,4 +1,4 @@
-package com.lilac.priyacoder.materialdesinginkotlin
+package com.lilac.priyacoder.materialdesigninkotlin
 
 import android.content.Context
 
