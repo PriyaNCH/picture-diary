@@ -2,12 +2,15 @@ package com.lilac.priyacoder.materialdesigninkotlin
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
+import android.util.DisplayMetrics
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import lib.folderpicker.FolderPicker
@@ -15,6 +18,7 @@ import java.io.File
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.HashMap
 
 /**
  * Created by 1021422 on 10/15/2017.
@@ -45,12 +49,12 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
         if (id == R.id.file_browser) {
-            displayFileChooser()
+            displayFolderChooserPopup()
         }
         return super.onOptionsItemSelected(item)
     }
 
-    fun displayFileChooser() {
+    fun displayFolderChooserPopup() {
 
         if(Build.VERSION.SDK_INT >= 23) {
             if (!storagePermissionAvailable()) {
@@ -85,29 +89,48 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent) {
         if (requestCode == FOLDER_PICKER_CODE && resultCode == Activity.RESULT_OK) {
-            val monthImageMap: HashMap<String, List<File>> = HashMap()
-            val df: DateFormat = SimpleDateFormat("MMM", Locale.GERMANY)
-
             val folderLocation = intent.extras!!.getString("data")
 
+            // Save the user selected folder into Shared Preferences
             val prefs = Prefs.getInstance(applicationContext)
             prefs.setValue(prefs.PREFERRED_FOLDER_KEY,folderLocation)
 
-            val directory = File(folderLocation)
-            val files: Array<File> = directory.listFiles()
-
-            for (imageFile in files) {
-                val month = df.format(imageFile.lastModified())
-
-                if (!monthImageMap.containsKey(month)) {
-                    monthImageMap[month] = ArrayList()
-                }
-                (monthImageMap[month]!! as ArrayList).add(imageFile)
-            }
-
             val mainActivityIntent = Intent(this.applicationContext, MainActivity::class.java)
-            mainActivityIntent.putExtra("imageMap", monthImageMap)
             startActivity(mainActivityIntent)
         }
     }
+
+    fun getImageMap(folderLocation : String): HashMap<String,List<File>> {
+
+        val monthImageMap: HashMap<String, List<File>> = HashMap()
+        val df: DateFormat = SimpleDateFormat("MMM", Locale.US)
+
+        val directory = File(folderLocation)
+        //Get all the Files in the user selected folder
+        val files: Array<File> = directory.listFiles()
+
+        //Check if the files present are images and only then display them
+        if(files.isNotEmpty()){
+            for (imageFile in files) {
+                if (!imageFile.isDirectory && isImage(imageFile)) {
+                    val month = df.format(imageFile.lastModified())
+
+                    if (!monthImageMap.containsKey(month)) {
+                        monthImageMap[month] = ArrayList()
+                    }
+                    (monthImageMap[month] as ArrayList).add(imageFile)
+                }
+            }
+        }
+        return monthImageMap
+    }
 }
+
+fun isImage(file: File): Boolean{
+    val imageFileExtensions: Array<String> = arrayOf("jpg","png","jpeg","gif")
+    val fileName = file.name.toLowerCase()
+    val fileExtension = fileName.subSequence(fileName.length-3,fileName.length)
+    return imageFileExtensions.contains(fileExtension)
+}
+
+fun getDisplayMetrics(context : Context) : DisplayMetrics { return context.resources.displayMetrics }

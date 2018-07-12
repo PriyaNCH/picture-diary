@@ -1,11 +1,20 @@
 package com.lilac.priyacoder.materialdesigninkotlin
 
 import android.content.Intent
-import android.content.SharedPreferences
+import android.opengl.Visibility
 import android.os.Bundle
 import android.support.v7.widget.StaggeredGridLayoutManager
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ImageSpan
+import android.util.DisplayMetrics
+import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 
@@ -28,21 +37,63 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Get the shared preferences of the application
         val prefs = Prefs.getInstance(applicationContext)
+        //Get the folder details the user selected previously
+        val preferredFolderValue = prefs.getValues().getString(prefs.PREFERRED_FOLDER_KEY,null)
 
-        prefs.getValues().getString(prefs.PREFERRED_FOLDER_KEY,null) ?: displayFileChooser()
+        // If the user has already selected folder, get the folder details
+        if(preferredFolderValue != null) {
+            val imageMap: HashMap<String, List<File>> = getImageMap(preferredFolderValue)
 
-        val imageMap: HashMap<String, List<File>> = intent.getSerializableExtra("imageMap") as HashMap<String, List<File>>
+            if(imageMap.isNotEmpty()){
+                // If the user selected folder has images, display them
+                list.visibility = View.VISIBLE
+                isListView = true
+                staggeredLayoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
+                list.layoutManager = staggeredLayoutManager
 
-        isListView = true
-        staggeredLayoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
-        list.layoutManager = staggeredLayoutManager
+                imageBucketAdapter = ImageBucketsAdapter(this, imageMap)
+                imageBucketAdapter.loadData()
+                list.adapter = imageBucketAdapter
 
-        imageBucketAdapter = ImageBucketsAdapter(this, imageMap)
-        imageBucketAdapter.loadData()
-        list.adapter = imageBucketAdapter
+                imageBucketAdapter.setOnItemClickListener(onItemClickListener)
+            } else{
+                // If there are no images in the folder or the folder is empty, display a message to user
+                list.visibility = View.GONE
 
-        imageBucketAdapter.setOnItemClickListener(onItemClickListener)
+                val metrics = getDisplayMetrics(this)
+                val deviceWidth = metrics.widthPixels
+                val deviceHeight = metrics.heightPixels
+
+                // Create an image view to display No images found
+                val not_found_imageView = ImageView(this)
+                not_found_imageView.setImageResource(R.drawable.ic_no_images_found)
+                val imageLayoutParams = LinearLayout.LayoutParams(deviceWidth/2,deviceHeight/2)
+
+                //Create a textview to prompt user to click on the folder icon in the app bar
+                val click_folderIcon_textView = TextView(this)
+                val imageSpan = ImageSpan(this,R.drawable.ic_open_folder)
+                val spannableString = SpannableString(getString(R.string.click_folder_icon))
+
+                // Add the folder icon at the index given for illustration
+                spannableString.setSpan(imageSpan,15,16, 0)
+                click_folderIcon_textView.text = spannableString
+
+                val textViewLayoutparams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT)
+                textViewLayoutparams.setMargins(resources.getDimensionPixelSize(R.dimen.activity_horizontal_margin),resources.getDimensionPixelSize(R.dimen.activity_vertical_margin),
+                        resources.getDimensionPixelSize(R.dimen.activity_vertical_margin),resources.getDimensionPixelSize(R.dimen.activity_horizontal_margin))
+
+                // Add both the views to the layout manager
+                mainActivity_layout.setHorizontalGravity(Gravity.CENTER)
+                mainActivity_layout.addView(not_found_imageView,imageLayoutParams)
+                mainActivity_layout.addView(click_folderIcon_textView,textViewLayoutparams)
+            }
+        }
+        else {
+            //In case user has not selected any folder yet, display the Directory Chooser Popup
+            displayFolderChooserPopup()
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
