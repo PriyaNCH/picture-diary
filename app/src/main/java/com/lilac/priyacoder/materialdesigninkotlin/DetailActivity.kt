@@ -2,10 +2,12 @@ package com.lilac.priyacoder.materialdesigninkotlin
 
 import android.animation.Animator
 import android.arch.persistence.room.Room
+import android.content.Context
 import android.graphics.drawable.Animatable
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import com.squareup.picasso.Picasso
@@ -13,6 +15,7 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_detail.*
+import kotlinx.android.synthetic.main.entries_listview.*
 import java.io.File
 
 
@@ -23,6 +26,8 @@ class DetailActivity : BaseActivity(){
 
     private var imageFile: File? = null
     private var isEditMode: Boolean = false
+
+    var inputMethodMgr : InputMethodManager? = null
 
     companion object {
         var database : PhotoEntryDatabase? = null
@@ -84,6 +89,7 @@ class DetailActivity : BaseActivity(){
             R.id.addButton -> {
                 if(isEditMode){
 
+                    inputMethodMgr?.hideSoftInputFromWindow(entryEditText.windowToken,0)
                     submitButton.animate().setListener(object:Animator.AnimatorListener {
                         override fun onAnimationRepeat(p0: Animator?) { return }
 
@@ -122,15 +128,19 @@ class DetailActivity : BaseActivity(){
 //                  revealView.setBackgroundColor(R.string.blur_effect)
                     entryEditText.visibility = View.VISIBLE
                     entryEditText.requestFocus()
+                    inputMethodMgr = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    inputMethodMgr?.showSoftInput(entryEditText,InputMethodManager.SHOW_IMPLICIT)
                     isEditMode = true
                 }
             }
 
             R.id.submitButton -> {
                 if(entryEditText.text.toString().isNotEmpty()){
+                    inputMethodMgr?.hideSoftInputFromWindow(entryEditText.windowToken,0)
                     entryEditText.setBackgroundResource(0)
 
                     addPhotoEntries()
+                    entryEditText.setText("")
                 } else {
                     entryEditText.setBackgroundResource(R.drawable.border)
                     Toast.makeText(this,"Please make an entry",Toast.LENGTH_SHORT).show()
@@ -168,7 +178,8 @@ class DetailActivity : BaseActivity(){
     private fun addPhotoEntries(){
         val photoEntries = PhotoEntries(0,imageFile?.absolutePath,entryEditText.text.toString())
 
-        Single.fromCallable { DetailActivity.database?.photoEntryDao()?.insert(photoEntries) }
+        Single.fromCallable {
+            DetailActivity.database?.photoEntryDao()?.insert(photoEntries) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe()
