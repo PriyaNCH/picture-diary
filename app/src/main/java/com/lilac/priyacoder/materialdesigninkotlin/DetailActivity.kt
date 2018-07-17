@@ -1,39 +1,72 @@
 package com.lilac.priyacoder.materialdesigninkotlin
 
 import android.animation.Animator
+import android.arch.persistence.room.Room
 import android.graphics.drawable.Animatable
 import android.os.Bundle
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import com.squareup.picasso.Picasso
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_detail.*
 import java.io.File
 
+
 class DetailActivity : BaseActivity(){
 
-    private lateinit var inputManager: InputMethodManager
-    private lateinit var todoList: ArrayList<String>
-    private lateinit var toDoAdapter: ArrayAdapter<*>
+    private lateinit var entryListAdapter: ArrayAdapter<String>
+    private var photoEntries : List<PhotoEntries>? = null
 
     private var imageFile: File? = null
     private var isEditMode: Boolean = false
+
+    companion object {
+        var database : PhotoEntryDatabase? = null
+    }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_detail)
 
+    entryListAdapter = ArrayAdapter(this,R.layout.entries_listview)
+    entriesList.adapter = entryListAdapter
+
+    // Initialize database to fetch or insert entries of the photo from/to database
+    database = Room.databaseBuilder(this, PhotoEntryDatabase::class.java,"photo-diary-database").build()
+
+//
+//      Thread(Runnable {
+//          val entries = kotlin.run { DetailActivity.database?.photoEntryDao()?.getAllEntries(imagePath = imageFile?.absolutePath) }
+//          Log.i("Activity", entries?.get(0))
+//      }).start()
+
     // Set this property to remove the Grid Toggle button in the app bar as it is not required
     super.showGridToggle = false
 
     imageFile = intent!!.getSerializableExtra("file") as File
-    loadPlace()
+
+      // Fetch and display entries in the list view
+      database?.photoEntryDao()?.getAllEntries(imagePath = imageFile?.absolutePath)
+              ?.subscribeOn(Schedulers.io())
+              ?.observeOn(AndroidSchedulers.mainThread())
+              ?.subscribe{photoEntries ->
+                  entryListAdapter.clear()
+                  for(entries in photoEntries) {
+                      entryListAdapter.add(entries.photoEntry)
+                  }
+              }
+
+      loadPlace()
 
     placeTitle.maxLines = 1
     placeTitle.isSelected = true
 
     submitButton.setOnClickListener { view -> onClick(view) }
-      addButton.setOnClickListener { view -> onClick(view) }
+    addButton.setOnClickListener { view -> onClick(view) }
+
   }
 
   private fun loadPlace() {
@@ -56,13 +89,13 @@ class DetailActivity : BaseActivity(){
                       override fun onAnimationStart(p0: Animator?) { return }
 
                   })
-                  submitButton.animate().x(addButton.x).setDuration(500).start()
+                  submitButton.animate().x(addButton.x).setDuration(1000).start()
 
                   addButton.setImageResource(R.drawable.icn_rotate_reverse)
                   (addButton.drawable as Animatable).start()
 
                   revealView.setBackgroundColor(0)
-                  todoText.visibility = View.GONE
+                  entryEditText.visibility = View.GONE
                   isEditMode = false
               }
 
@@ -77,19 +110,46 @@ class DetailActivity : BaseActivity(){
                       override fun onAnimationStart(p0: Animator?) { submitButton.visibility = View.VISIBLE }
 
                   })
-                  submitButton.animate().x(addButton.x - 200).setDuration(500).start()
+                  submitButton.animate().x(addButton.x - 200).setDuration(1000).start()
                   addButton.setImageResource(R.drawable.icn_rotate)
                   (addButton.drawable as Animatable).start()
 
-                  revealView.setBackgroundColor(R.string.blur_effect)
-                  todoText.visibility = View.VISIBLE
-                  todoText.requestFocus()
+//                  revealView.setBackgroundColor(R.string.blur_effect)
+                  entryEditText.visibility = View.VISIBLE
+                  entryEditText.requestFocus()
                   isEditMode = true
               }
           }
 
           R.id.submitButton -> {
-              return
+              if(entryEditText.text.toString().isNotEmpty()){
+                  entryEditText.setBackgroundResource(0)
+
+                  addPhotoEntries()
+              } else {
+                  entryEditText.setBackgroundResource(R.drawable.border)
+                  Toast.makeText(this,"Please make an entry",Toast.LENGTH_SHORT).show()
+              }
+
+              submitButton.animate().setListener(object:Animator.AnimatorListener {
+                  override fun onAnimationRepeat(p0: Animator?) { return }
+
+                  override fun onAnimationEnd(p0: Animator?) { submitButton.visibility = View.GONE }
+
+                  override fun onAnimationCancel(p0: Animator?) { return }
+
+                  override fun onAnimationStart(p0: Animator?) { return }
+
+              })
+              submitButton.animate().x(addButton.x).setDuration(500).start()
+
+              addButton.setImageResource(R.drawable.icn_rotate_reverse)
+              (addButton.drawable as Animatable).start()
+
+              revealView.setBackgroundColor(0)
+              entryEditText.visibility = View.GONE
+              isEditMode = false
+
 //              val transAnimation = ObjectAnimator.ofFloat(submitButton,"x",20f)
 //              transAnimation.duration = 1000
 //              transAnimation.start()
@@ -98,5 +158,19 @@ class DetailActivity : BaseActivity(){
 //              (addButton.drawable as Animatable).start()
           }
       }
+    }
+
+    fun addPhotoEntries(){
+        val photoEntries = PhotoEntries(0,imageFile?.absolutePath,entryEditText.text.toString())
+
+        Single.fromCallable {
+            DetailActivity.database?.photoEntryDao()?.insert(photoEntries) }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe()
+//
+//        Thread(Runnable {
+//            kotlin.run { DetailActivity.database?.photoEntryDao()?.insert(photoEntries) }
+//        }).start()
     }
 }

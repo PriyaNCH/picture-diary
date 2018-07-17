@@ -20,7 +20,7 @@
             android:layout_height="match_parent">
 
             <EditText
-                android:id="@+id/todoText"
+                android:id="@+id/entryEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -83,17 +83,8 @@
 
     </FrameLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="-10dp"
-        android:text="@string/my_entries"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@android:color/black" />
-
     <ListView
-        android:id="@+id/activitiesList"
+        android:id="@+id/entriesList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:requiresFadingEdge="vertical" />
