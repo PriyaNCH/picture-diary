@@ -4,6 +4,7 @@ import android.animation.Animator
 import android.arch.persistence.room.Room
 import android.graphics.drawable.Animatable
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
@@ -27,128 +28,132 @@ class DetailActivity : BaseActivity(){
         var database : PhotoEntryDatabase? = null
     }
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_detail)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_detail)
 
-    entryListAdapter = ArrayAdapter(this,R.layout.entries_listview)
-    entriesList.adapter = entryListAdapter
+        if(savedInstanceState != null){
+            entryEditText.setText(savedInstanceState.getString(getString(R.string.editTextValue)))
+        }
 
-    // Initialize database to fetch or insert entries of the photo from/to database
-    database = Room.databaseBuilder(this, PhotoEntryDatabase::class.java,"photo-diary-database").build()
+        entryListAdapter = ArrayAdapter(this,R.layout.entries_listview)
+        entriesList.adapter = entryListAdapter
 
-//
-//      Thread(Runnable {
-//          val entries = kotlin.run { DetailActivity.database?.photoEntryDao()?.getAllEntries(imagePath = imageFile?.absolutePath) }
-//          Log.i("Activity", entries?.get(0))
-//      }).start()
+        // Initialize database to fetch or insert entries of the photo from/to database
+        database = Room.databaseBuilder(this, PhotoEntryDatabase::class.java,"photo-diary-database").build()
 
-    // Set this property to remove the Grid Toggle button in the app bar as it is not required
-    super.showGridToggle = false
+        // Set this property to remove the Grid Toggle button in the app bar as it is not required
+        super.showGridToggle = false
 
-    imageFile = intent!!.getSerializableExtra("file") as File
+        imageFile = intent!!.getSerializableExtra("file") as File
 
-      // Fetch and display entries in the list view
-      database?.photoEntryDao()?.getAllEntries(imagePath = imageFile?.absolutePath)
-              ?.subscribeOn(Schedulers.io())
-              ?.observeOn(AndroidSchedulers.mainThread())
-              ?.subscribe{photoEntries ->
-                  entryListAdapter.clear()
-                  for(entries in photoEntries) {
-                      entryListAdapter.add(entries.photoEntry)
-                  }
-              }
+        // Fetch and display entries in the list view
+        database?.photoEntryDao()?.getAllEntries(imagePath = imageFile?.absolutePath)
+                ?.subscribeOn(Schedulers.io())
+                ?.observeOn(AndroidSchedulers.mainThread())
+                ?.subscribe{photoEntries ->
+                    entryListAdapter.clear()
+                    for(entries in photoEntries) {
+                        entryListAdapter.add(entries.photoEntry)
+                    }
+                }
 
-      loadPlace()
+        loadPlace()
 
-    placeTitle.maxLines = 1
-    placeTitle.isSelected = true
+        placeTitle.maxLines = 1
+        placeTitle.isSelected = true
 
-    submitButton.setOnClickListener { view -> onClick(view) }
-    addButton.setOnClickListener { view -> onClick(view) }
+        submitButton.setOnClickListener { view -> onClick(view) }
+        addButton.setOnClickListener { view -> onClick(view) }
 
-  }
+    }
 
-  private fun loadPlace() {
-    placeTitle.text = imageFile?.name
-    Picasso.with(this).load(imageFile).fit().centerCrop().into(placeImage)
-  }
+    // Save value entered in EditText so that the value can be retained during configuration changes like orientation etc.
+    override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
+        super.onSaveInstanceState(outState, outPersistentState)
+        outPersistentState?.putString(resources.getString(R.string.editTextValue),entryEditText.text.toString())
+    }
 
-  private fun onClick(view: View) {
-      when(view.id){
-          R.id.addButton -> {
-              if(isEditMode){
+    private fun loadPlace() {
+        placeTitle.text = imageFile?.name
+        Picasso.with(this).load(imageFile).fit().centerCrop().into(placeImage)
+    }
 
-                  submitButton.animate().setListener(object:Animator.AnimatorListener {
-                      override fun onAnimationRepeat(p0: Animator?) { return }
+    private fun onClick(view: View) {
+        when(view.id){
+            R.id.addButton -> {
+                if(isEditMode){
 
-                      override fun onAnimationEnd(p0: Animator?) { submitButton.visibility = View.GONE }
+                    submitButton.animate().setListener(object:Animator.AnimatorListener {
+                        override fun onAnimationRepeat(p0: Animator?) { return }
 
-                      override fun onAnimationCancel(p0: Animator?) { return }
+                        override fun onAnimationEnd(p0: Animator?) { submitButton.visibility = View.GONE }
 
-                      override fun onAnimationStart(p0: Animator?) { return }
+                        override fun onAnimationCancel(p0: Animator?) { return }
 
-                  })
-                  submitButton.animate().x(addButton.x).setDuration(1000).start()
+                        override fun onAnimationStart(p0: Animator?) { return }
 
-                  addButton.setImageResource(R.drawable.icn_rotate_reverse)
-                  (addButton.drawable as Animatable).start()
+                    })
+                    submitButton.animate().x(addButton.x).setDuration(1000).start()
 
-                  revealView.setBackgroundColor(0)
-                  entryEditText.visibility = View.GONE
-                  isEditMode = false
-              }
+                    addButton.setImageResource(R.drawable.icn_rotate_reverse)
+                    (addButton.drawable as Animatable).start()
 
-              else {
-                  submitButton.animate().setListener(object:Animator.AnimatorListener {
-                      override fun onAnimationRepeat(p0: Animator?) { return }
+                    revealView.setBackgroundColor(0)
+                    entryEditText.visibility = View.GONE
+                    isEditMode = false
+                }
 
-                      override fun onAnimationEnd(p0: Animator?) { return }
+                else {
+                    submitButton.animate().setListener(object:Animator.AnimatorListener {
+                        override fun onAnimationRepeat(p0: Animator?) { return }
 
-                      override fun onAnimationCancel(p0: Animator?) { return }
+                        override fun onAnimationEnd(p0: Animator?) { return }
 
-                      override fun onAnimationStart(p0: Animator?) { submitButton.visibility = View.VISIBLE }
+                        override fun onAnimationCancel(p0: Animator?) { return }
 
-                  })
-                  submitButton.animate().x(addButton.x - 200).setDuration(1000).start()
-                  addButton.setImageResource(R.drawable.icn_rotate)
-                  (addButton.drawable as Animatable).start()
+                        override fun onAnimationStart(p0: Animator?) { submitButton.visibility = View.VISIBLE }
+
+                    })
+                    submitButton.animate().x(addButton.x - 200).setDuration(1000).start()
+                    addButton.setImageResource(R.drawable.icn_rotate)
+                    (addButton.drawable as Animatable).start()
 
 //                  revealView.setBackgroundColor(R.string.blur_effect)
-                  entryEditText.visibility = View.VISIBLE
-                  entryEditText.requestFocus()
-                  isEditMode = true
-              }
-          }
+                    entryEditText.visibility = View.VISIBLE
+                    entryEditText.requestFocus()
+                    isEditMode = true
+                }
+            }
 
-          R.id.submitButton -> {
-              if(entryEditText.text.toString().isNotEmpty()){
-                  entryEditText.setBackgroundResource(0)
+            R.id.submitButton -> {
+                if(entryEditText.text.toString().isNotEmpty()){
+                    entryEditText.setBackgroundResource(0)
 
-                  addPhotoEntries()
-              } else {
-                  entryEditText.setBackgroundResource(R.drawable.border)
-                  Toast.makeText(this,"Please make an entry",Toast.LENGTH_SHORT).show()
-              }
+                    addPhotoEntries()
+                } else {
+                    entryEditText.setBackgroundResource(R.drawable.border)
+                    Toast.makeText(this,"Please make an entry",Toast.LENGTH_SHORT).show()
+                }
 
-              submitButton.animate().setListener(object:Animator.AnimatorListener {
-                  override fun onAnimationRepeat(p0: Animator?) { return }
+                submitButton.animate().setListener(object:Animator.AnimatorListener {
+                    override fun onAnimationRepeat(p0: Animator?) { return }
 
-                  override fun onAnimationEnd(p0: Animator?) { submitButton.visibility = View.GONE }
+                    override fun onAnimationEnd(p0: Animator?) { submitButton.visibility = View.GONE }
 
-                  override fun onAnimationCancel(p0: Animator?) { return }
+                    override fun onAnimationCancel(p0: Animator?) { return }
 
-                  override fun onAnimationStart(p0: Animator?) { return }
+                    override fun onAnimationStart(p0: Animator?) { return }
 
-              })
-              submitButton.animate().x(addButton.x).setDuration(500).start()
+                })
+                submitButton.animate().x(addButton.x).setDuration(500).start()
 
-              addButton.setImageResource(R.drawable.icn_rotate_reverse)
-              (addButton.drawable as Animatable).start()
+                addButton.setImageResource(R.drawable.icn_rotate_reverse)
+                (addButton.drawable as Animatable).start()
 
-              revealView.setBackgroundColor(0)
-              entryEditText.visibility = View.GONE
-              isEditMode = false
+                revealView.setBackgroundColor(0)
+                entryEditText.visibility = View.GONE
+                isEditMode = false
 
 //              val transAnimation = ObjectAnimator.ofFloat(submitButton,"x",20f)
 //              transAnimation.duration = 1000
@@ -156,21 +161,16 @@ class DetailActivity : BaseActivity(){
 //              submitButton.visibility = View.GONE
 //              addButton.setImageResource(R.drawable.icn_rotate_reverse)
 //              (addButton.drawable as Animatable).start()
-          }
-      }
+            }
+        }
     }
 
-    fun addPhotoEntries(){
+    private fun addPhotoEntries(){
         val photoEntries = PhotoEntries(0,imageFile?.absolutePath,entryEditText.text.toString())
 
-        Single.fromCallable {
-            DetailActivity.database?.photoEntryDao()?.insert(photoEntries) }
+        Single.fromCallable { DetailActivity.database?.photoEntryDao()?.insert(photoEntries) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe()
-//
-//        Thread(Runnable {
-//            kotlin.run { DetailActivity.database?.photoEntryDao()?.insert(photoEntries) }
-//        }).start()
     }
 }

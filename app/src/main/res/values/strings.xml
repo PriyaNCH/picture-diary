@@ -10,4 +10,5 @@
   <string name="btn_choose">Choose</string>
   <string name="blur_effect">blur_effect</string>
   <string name="click_folder_icon">Please click on  icon in the app bar to select another folder</string>
+  <string name="editTextValue">editTextValue</string>
 </resources>
