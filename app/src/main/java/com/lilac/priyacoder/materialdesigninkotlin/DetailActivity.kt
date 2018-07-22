@@ -6,10 +6,17 @@ import android.content.Context
 import android.graphics.drawable.Animatable
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.Toast
+import com.daimajia.swipe.SwipeLayout
+import com.daimajia.swipe.adapters.ArraySwipeAdapter
+import com.daimajia.swipe.util.Attributes
 import com.squareup.picasso.Picasso
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -17,12 +24,13 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_detail.*
 import kotlinx.android.synthetic.main.entries_listview.*
 import java.io.File
+import java.security.KeyStore
 
 
 class DetailActivity : BaseActivity(){
 
-    private lateinit var entryListAdapter: ArrayAdapter<String>
-    private var photoEntries : List<PhotoEntries>? = null
+    private lateinit var entryListAdapter: EntryListAdapter
+    private var photoEntries : MutableList<String>? = null
 
     private var imageFile: File? = null
     private var isEditMode: Boolean = false
@@ -41,8 +49,11 @@ class DetailActivity : BaseActivity(){
             entryEditText.setText(savedInstanceState.getString(getString(R.string.editTextValue)))
         }
 
-        entryListAdapter = ArrayAdapter(this,R.layout.entries_listview)
+        photoEntries = mutableListOf("a","b")
+        entryListAdapter = EntryListAdapter(this,R.layout.entries_listview,R.id.text_data,photoEntries)
         entriesList.adapter = entryListAdapter
+        entryListAdapter.mode = Attributes.Mode.Single
+
 
         // Initialize database to fetch or insert entries of the photo from/to database
         database = Room.databaseBuilder(this, PhotoEntryDatabase::class.java,"photo-diary-database").build()
