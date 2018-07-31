@@ -18,6 +18,7 @@
         android:weightSum="4">
 
         <TextView
+            android:id="@+id/editEntry"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -27,6 +28,7 @@
             android:gravity="center"
             android:textSize="17sp" />
         <TextView
+            android:id="@+id/deleteEntry"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
