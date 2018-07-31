@@ -13,4 +13,5 @@
   <string name="editTextValue">editTextValue</string>
   <string name="editEntry">Edit</string>
   <string name="deleteEntry">Delete</string>
+  <string name="hoverMessage">Swipe left to reveal the options</string>
 </resources>

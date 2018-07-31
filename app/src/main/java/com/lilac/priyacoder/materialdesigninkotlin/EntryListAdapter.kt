@@ -5,7 +5,7 @@ import android.content.Context
 
 import com.daimajia.swipe.adapters.ArraySwipeAdapter
 
-class EntryListAdapter(context: Context?, resource: Int, textViewResourceId : Int, objects: MutableList<String>?) : ArraySwipeAdapter<String>(context, resource, textViewResourceId, objects) {
+class EntryListAdapter(context: Context?, resource: Int, textViewResourceId : Int) : ArraySwipeAdapter<String>(context, resource, textViewResourceId) {
 
 
     override fun getSwipeLayoutResourceId(position: Int): Int {

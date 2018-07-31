@@ -30,7 +30,6 @@ import java.security.KeyStore
 class DetailActivity : BaseActivity(){
 
     private lateinit var entryListAdapter: EntryListAdapter
-    private var photoEntries : MutableList<String>? = null
 
     private var imageFile: File? = null
     private var isEditMode: Boolean = false
@@ -48,9 +47,7 @@ class DetailActivity : BaseActivity(){
         if(savedInstanceState != null){
             entryEditText.setText(savedInstanceState.getString(getString(R.string.editTextValue)))
         }
-
-        photoEntries = mutableListOf("a","b")
-        entryListAdapter = EntryListAdapter(this,R.layout.entries_listview,R.id.text_data,photoEntries)
+        entryListAdapter = EntryListAdapter(this,R.layout.entries_listview,R.id.text_data)
         entriesList.adapter = entryListAdapter
         entryListAdapter.mode = Attributes.Mode.Single
 
