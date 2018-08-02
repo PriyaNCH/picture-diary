@@ -5,6 +5,6 @@ import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 
 @Entity(tableName = "photoEntries")
-data class PhotoEntries(@PrimaryKey(autoGenerate = true) var photoEntryId: Long = 0,
+data class PhotoEntriesModel(@PrimaryKey(autoGenerate = true) var photoEntryId: Long = 0,
                         @ColumnInfo var imageFullPath : String?,
                         @ColumnInfo var photoEntry : String)

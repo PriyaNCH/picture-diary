@@ -51,7 +51,6 @@ class DetailActivity : BaseActivity(){
         entriesList.adapter = entryListAdapter
         entryListAdapter.mode = Attributes.Mode.Single
 
-
         // Initialize database to fetch or insert entries of the photo from/to database
         database = Room.databaseBuilder(this, PhotoEntryDatabase::class.java,"photo-diary-database").build()
 
@@ -184,7 +183,7 @@ class DetailActivity : BaseActivity(){
     }
 
     private fun addPhotoEntries(){
-        val photoEntries = PhotoEntries(0,imageFile?.absolutePath,entryEditText.text.toString())
+        val photoEntries = PhotoEntriesModel(0,imageFile?.absolutePath,entryEditText.text.toString())
 
         Single.fromCallable {
             DetailActivity.database?.photoEntryDao()?.insert(photoEntries) }

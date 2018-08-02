@@ -22,7 +22,7 @@ class EntryListAdapter(context: Context?, resource: Int, textViewResourceId : In
             val textData = convertView.findViewById<TextView>(R.id.text_data)
             showInputDialog(textData,parent)
         }
-        convertView?.findViewById<View>(R.id.deleteEntry)?.setOnClickListener { Toast.makeText(context,"Edit is clicked",Toast.LENGTH_SHORT).show() }
+        convertView?.findViewById<View>(R.id.deleteEntry)?.setOnClickListener { Toast.makeText(context,"Delete is clicked",Toast.LENGTH_SHORT).show() }
         return super.getView(position, convertView, parent)
     }
 
