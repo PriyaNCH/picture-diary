@@ -17,18 +17,15 @@ interface PhotoEntryDao{
     fun updateEntries(id : Long, entry : String)
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    fun update(photoEntries : PhotoEntriesModel)
+    fun update(photoEntryModel : PhotoEntriesModel)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(photoEntries: PhotoEntriesModel)
-
-    @Query("DELETE from photoEntries where imageFullPath = :imagePath and photoEntry = :entry and photoEntryId = :id")
-    fun deleteEntryById(imagePath: String, entry : String, id : Long)
+    fun insert(photoEntryModel : PhotoEntriesModel)
 
     @Query("DELETE from photoEntries where imageFullPath = :imagePath")
     fun deleteAllByImage(imagePath: String)
 
-    @Query("DELETE from photoEntries")
-    fun deleteAll()
+    @Delete
+    fun deletePhotoEntry(photoEntryModel : PhotoEntriesModel)
 
 }

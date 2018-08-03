@@ -2,8 +2,6 @@ package com.lilac.priyacoder.materialdesigninkotlin
 
 import android.app.AlertDialog
 import android.content.Context
-import android.support.v7.widget.RecyclerView
-import android.text.Layout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,13 +49,15 @@ class EntryListAdapter(context: Context?, resource: Int, textViewResourceId : In
         viewHolder.textData?.text = photoEntryObject.photoEntry
 
         returnView?.findViewById<View>(R.id.editEntry)?.setOnClickListener {
-                showInputDialog(viewHolder?.textData,parent, position) // Need to remove textData and in the function directly call textResourceId instead of entryview
+                showEditWindow(viewHolder?.textData,parent, position) // Need to remove textData and in the function directly call textResourceId instead of entryview
         }
-        returnView?.findViewById<View>(R.id.deleteEntry)?.setOnClickListener { Toast.makeText(context,"Delete is clicked",Toast.LENGTH_SHORT).show() }
+        returnView?.findViewById<View>(R.id.deleteEntry)?.setOnClickListener {
+            deleteEntry(position)
+        }
         return returnView
     }
 
-    private fun showInputDialog(entryView : TextView?, viewGroup: ViewGroup?, pos : Int) {
+    private fun showEditWindow(entryView : TextView?, viewGroup: ViewGroup?, clickedIndex : Int) {
 
         // Create an EditText to show the entry in full in
         val editAlertWindow = LayoutInflater.from(context).inflate(R.layout.edit_entry_alert_dialog,viewGroup,false)
@@ -76,7 +76,7 @@ class EntryListAdapter(context: Context?, resource: Int, textViewResourceId : In
             val editedText = editAlertWindow.entryEditAlertView.text
 
             if(editedText != null) {
-                photoEntryObject = getItem(pos) as PhotoEntriesModel
+                photoEntryObject = getItem(clickedIndex) as PhotoEntriesModel
                 photoEntryObject.setEntry(editedText.toString())
                 Single.fromCallable{
                     database?.photoEntryDao()?.update(photoEntryObject)}
@@ -92,6 +92,16 @@ class EntryListAdapter(context: Context?, resource: Int, textViewResourceId : In
             dialog.dismiss()
         }
         builder.show()
+    }
+
+    fun deleteEntry(clickedIndex : Int){
+        photoEntryObject = getItem(clickedIndex) as PhotoEntriesModel
+        Single.fromCallable{
+            database?.photoEntryDao()?.deletePhotoEntry(photoEntryObject)}
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe()
+        this.notifyDataSetChanged()
     }
 }
 
