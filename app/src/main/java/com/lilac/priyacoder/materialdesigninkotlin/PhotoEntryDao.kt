@@ -1,9 +1,6 @@
 package com.lilac.priyacoder.materialdesigninkotlin
 
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Insert
-import android.arch.persistence.room.OnConflictStrategy
-import android.arch.persistence.room.Query
+import android.arch.persistence.room.*
 import io.reactivex.Flowable
 import org.intellij.lang.annotations.Flow
 
@@ -15,6 +12,12 @@ interface PhotoEntryDao{
 
     @Query("Select * from photoEntries where imageFullPath = :imagePath")
     fun getAllEntries(imagePath : String?) : Flowable<List<PhotoEntriesModel>>
+
+    @Query("Update photoEntries set photoEntry = :entry where photoEntryId = :id")
+    fun updateEntries(id : Long, entry : String)
+
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    fun update(photoEntries : PhotoEntriesModel)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(photoEntries: PhotoEntriesModel)

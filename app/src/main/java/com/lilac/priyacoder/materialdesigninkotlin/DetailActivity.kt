@@ -65,9 +65,7 @@ class DetailActivity : BaseActivity(){
                 ?.observeOn(AndroidSchedulers.mainThread())
                 ?.subscribe{photoEntries ->
                     entryListAdapter.clear()
-                    for(entries in photoEntries) {
-                        entryListAdapter.add(entries.photoEntry)
-                    }
+                        entryListAdapter.addAll(photoEntries)
                 }
 
         loadPlace()
