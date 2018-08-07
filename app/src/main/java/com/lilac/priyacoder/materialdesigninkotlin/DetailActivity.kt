@@ -44,6 +44,7 @@ class DetailActivity : BaseActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
 
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         if(savedInstanceState != null){
             entryEditText.setText(savedInstanceState.getString(getString(R.string.editTextValue)))
         }

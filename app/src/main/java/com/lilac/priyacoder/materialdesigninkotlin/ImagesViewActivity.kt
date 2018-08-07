@@ -2,6 +2,7 @@ package com.lilac.priyacoder.materialdesigninkotlin
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.app.NavUtils
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.MenuItem
 import android.view.View
@@ -28,6 +29,9 @@ class ImagesViewActivity: BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.images_view)
 
+        //Enable this to add an Up action
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         val monthCode = intent.getStringExtra("monthCode")
         val imageMap: HashMap<String,List<File>> = intent.getSerializableExtra("imageMap") as HashMap<String, List<File>>
         val listOfFiles: List<File>? = imageMap[monthCode]
@@ -42,10 +46,16 @@ class ImagesViewActivity: BaseActivity() {
         adapter.setOnItemClickListener(onItemClickListener)
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id = item.itemId
-        if (id == R.id.action_toggle) {
-            toggle()
-            return true
+
+        when(item.itemId){
+            R.id.action_toggle -> {
+                toggle()
+                return true
+            }
+            R.id.home -> {
+                NavUtils.navigateUpFromSameTask(this)
+                return true
+            }
         }
         return super.onOptionsItemSelected(item)
     }
