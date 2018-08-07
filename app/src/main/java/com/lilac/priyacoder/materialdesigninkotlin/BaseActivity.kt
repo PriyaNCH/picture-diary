@@ -92,12 +92,15 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
-        if (requestCode == FOLDER_PICKER_CODE && resultCode == Activity.RESULT_OK) {
-            var folderLocation = intent?.extras?.getString("data")
+        val folderLocation = intent?.extras?.getString("data")
+        val prefs = Prefs.getInstance(applicationContext)
 
+        if(resultCode == Activity.RESULT_CANCELED && !File(prefs.PREFS_FILENAME).exists()){
+            displayFolderChooserPopup()
+        }
+        if (requestCode == FOLDER_PICKER_CODE && resultCode == Activity.RESULT_OK) {
             // Save the user selected folder into Shared Preferences
             if(folderLocation != null) {
-                val prefs = Prefs.getInstance(applicationContext)
                     prefs.setValue(prefs.PREFERRED_FOLDER_KEY, folderLocation)
 
                     val mainActivityIntent = Intent(this.applicationContext, MainActivity::class.java)
