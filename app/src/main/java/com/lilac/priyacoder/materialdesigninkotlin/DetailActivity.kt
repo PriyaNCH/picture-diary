@@ -79,9 +79,9 @@ class DetailActivity : BaseActivity(){
     }
 
     // Save value entered in EditText so that the value can be retained during configuration changes like orientation etc.
-    override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
-        super.onSaveInstanceState(outState, outPersistentState)
-        outPersistentState?.putString(resources.getString(R.string.editTextValue),entryEditText.text.toString())
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        outState?.putString(resources.getString(R.string.editTextValue),entryEditText.text.toString())
     }
 
     private fun loadPlace() {
