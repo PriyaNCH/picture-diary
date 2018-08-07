@@ -13,6 +13,7 @@ import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import lib.folderpicker.FolderPicker
 import java.io.File
 import java.text.DateFormat
@@ -28,7 +29,6 @@ abstract class BaseActivity : AppCompatActivity() {
     protected lateinit var menu: Menu
     protected var showFileSelector = true
     protected var showGridToggle = true
-    var myAppPrefs : Prefs? = null
 
     companion object {
         private const val SDCARD_PERMISSION_FOLDER = 12
@@ -87,16 +87,20 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         if (requestCode == FOLDER_PICKER_CODE && resultCode == Activity.RESULT_OK) {
-            val folderLocation = intent.extras!!.getString("data")
+            val folderLocation = intent?.extras?.getString("data")
 
             // Save the user selected folder into Shared Preferences
-            val prefs = Prefs.getInstance(applicationContext)
-            prefs.setValue(prefs.PREFERRED_FOLDER_KEY,folderLocation)
+            if(folderLocation != null) {
+                val prefs = Prefs.getInstance(applicationContext)
+                prefs.setValue(prefs.PREFERRED_FOLDER_KEY, folderLocation)
 
-            val mainActivityIntent = Intent(this.applicationContext, MainActivity::class.java)
-            startActivity(mainActivityIntent)
+                val mainActivityIntent = Intent(this.applicationContext, MainActivity::class.java)
+                startActivity(mainActivityIntent)
+            }else {
+                Toast.makeText(this,"Something went wrong! Please select folder again",Toast.LENGTH_LONG).show()
+            }
         }
     }
 

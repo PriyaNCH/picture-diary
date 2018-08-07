@@ -13,7 +13,7 @@ class Prefs private constructor(context: Context) {
         return settings
     }
 
-    fun setValue(key: String,value: String){
+    fun setValue(key: String,value: String?){
         settings.edit().putString(key,value).apply()
     }
     companion object : SingletonHolder<Prefs, Context>(::Prefs)
