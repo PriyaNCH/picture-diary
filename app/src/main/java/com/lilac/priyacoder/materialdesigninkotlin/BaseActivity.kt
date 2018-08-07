@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
+import android.os.Environment
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
@@ -26,6 +27,7 @@ import kotlin.collections.HashMap
  */
 abstract class BaseActivity : AppCompatActivity() {
 
+    val TAG : String = "BaseActivity"
     protected lateinit var menu: Menu
     protected var showFileSelector = true
     protected var showGridToggle = true
@@ -68,6 +70,8 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     private fun pickFolder() {
+
+        Log.i(TAG, Environment.getExternalStorageDirectory().absolutePath)
         val intent = Intent(this.applicationContext, FolderPicker::class.java)
         startActivityForResult(intent, FOLDER_PICKER_CODE)
     }
@@ -80,7 +84,7 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onRequestPermissionsResult(requestCode: Int,
                                             permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
-            SDCARD_PERMISSION_FOLDER -> if (grantResults.isNotEmpty() && grantResults[0] === PackageManager.PERMISSION_GRANTED) {
+            SDCARD_PERMISSION_FOLDER -> if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                 pickFolder()
             }
@@ -89,15 +93,15 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         if (requestCode == FOLDER_PICKER_CODE && resultCode == Activity.RESULT_OK) {
-            val folderLocation = intent?.extras?.getString("data")
+            var folderLocation = intent?.extras?.getString("data")
 
             // Save the user selected folder into Shared Preferences
             if(folderLocation != null) {
                 val prefs = Prefs.getInstance(applicationContext)
-                prefs.setValue(prefs.PREFERRED_FOLDER_KEY, folderLocation)
+                    prefs.setValue(prefs.PREFERRED_FOLDER_KEY, folderLocation)
 
-                val mainActivityIntent = Intent(this.applicationContext, MainActivity::class.java)
-                startActivity(mainActivityIntent)
+                    val mainActivityIntent = Intent(this.applicationContext, MainActivity::class.java)
+                    startActivity(mainActivityIntent)
             }else {
                 Toast.makeText(this,"Something went wrong! Please select folder again",Toast.LENGTH_LONG).show()
             }
@@ -110,19 +114,24 @@ abstract class BaseActivity : AppCompatActivity() {
         val df: DateFormat = SimpleDateFormat("MMM", Locale.US)
 
         val directory = File(folderLocation)
-        //Get all the Files in the user selected folder
-        val files: Array<File> = directory.listFiles()
 
-        //Check if the files present are images and only then display them
-        if(files.isNotEmpty()){
-            for (imageFile in files) {
-                if (!imageFile.isDirectory && isImage(imageFile)) {
-                    val month = df.format(imageFile.lastModified())
+        if(!directory.canRead()){
+            displayFolderChooserPopup()
+        } else {
+            //Get all the Files in the user selected folder
+            val files: Array<File> = directory.listFiles()
 
-                    if (!monthImageMap.containsKey(month)) {
-                        monthImageMap[month] = ArrayList()
+            //Check if the files present are images and only then display them
+            if (files.isNotEmpty()) {
+                for (imageFile in files) {
+                    if (!imageFile.isDirectory && isImage(imageFile)) {
+                        val month = df.format(imageFile.lastModified())
+
+                        if (!monthImageMap.containsKey(month)) {
+                            monthImageMap[month] = ArrayList()
+                        }
+                        (monthImageMap[month] as ArrayList).add(imageFile)
                     }
-                    (monthImageMap[month] as ArrayList).add(imageFile)
                 }
             }
         }

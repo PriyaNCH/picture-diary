@@ -69,6 +69,9 @@ class MainActivity : BaseActivity() {
                 // Create an image view to display No images found
                 val not_found_imageView = ImageView(this)
                 not_found_imageView.setImageResource(R.drawable.ic_no_images_found)
+
+                //Remove the Grid layout icon
+                showGridToggle = false
                 val imageLayoutParams = LinearLayout.LayoutParams(deviceWidth/2,deviceHeight/2)
 
                 //Create a textview to prompt user to click on the folder icon in the app bar
