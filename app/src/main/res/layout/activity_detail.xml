@@ -9,7 +9,7 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/placeImage"
+            android:id="@+id/placeImageDetail"
             android:layout_width="match_parent"
             android:layout_height="220dp"
             android:scaleType="centerCrop" />
@@ -27,7 +27,8 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:textColor="@android:color/white"
-                android:visibility="invisible" />
+                android:visibility="invisible"
+                android:hint="@string/hint_add_note"/>
 
         </LinearLayout>
 

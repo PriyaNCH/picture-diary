@@ -1,14 +1,17 @@
 package com.lilac.priyacoder.materialdesigninkotlin
 
 import android.animation.Animator
+import android.app.Dialog
 import android.arch.persistence.room.Room
 import android.content.Context
 import android.graphics.drawable.Animatable
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.ImageView
@@ -23,6 +26,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_detail.*
 import kotlinx.android.synthetic.main.entries_listview.*
+import kotlinx.android.synthetic.main.preview_image.*
 import java.io.File
 import java.security.KeyStore
 
@@ -33,6 +37,8 @@ class DetailActivity : BaseActivity(){
 
     private var imageFile: File? = null
     private var isEditMode: Boolean = false
+
+    private var mClickListener : View.OnClickListener? = null
 
     var inputMethodMgr : InputMethodManager? = null
 
@@ -69,14 +75,32 @@ class DetailActivity : BaseActivity(){
                         entryListAdapter.addAll(photoEntries)
                 }
 
-        loadPlace()
+        // Show the image selected by the user
+        loadImage()
 
+        mClickListener = View.OnClickListener { it ->
+            val imageDialog = Dialog(this, android.R.style.Theme_Translucent_NoTitleBar_Fullscreen)
+            imageDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            imageDialog.setCancelable(false)
+            imageDialog.setContentView(R.layout.preview_image)
+
+            Picasso.with(this).load(imageFile).fit().centerCrop().into(imageDialog.preview_imageView)
+
+            imageDialog.close_image_preview_button.setOnClickListener {
+                imageDialog.dismiss()
+            }
+            imageDialog.show()
+        }
+
+        //On Touch the full image is displayed in the entire screen
+        placeImageDetail.setOnClickListener(mClickListener)
+
+        // Display the image name
         placeTitle.maxLines = 1
         placeTitle.isSelected = true
 
         submitButton.setOnClickListener { view -> onClick(view) }
         addButton.setOnClickListener { view -> onClick(view) }
-
     }
 
     // Save value entered in EditText so that the value can be retained during configuration changes like orientation etc.
@@ -85,9 +109,9 @@ class DetailActivity : BaseActivity(){
         outState?.putString(resources.getString(R.string.editTextValue),entryEditText.text.toString())
     }
 
-    private fun loadPlace() {
+    private fun loadImage() {
         placeTitle.text = imageFile?.name
-        Picasso.with(this).load(imageFile).fit().centerCrop().into(placeImage)
+        Picasso.with(this).load(imageFile).fit().centerCrop().into(placeImageDetail)
     }
 
     private fun onClick(view: View) {
