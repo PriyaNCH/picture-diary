@@ -15,8 +15,8 @@ import java.io.File
 class ImagesViewActivity: BaseActivity() {
 
     private var isListView: Boolean = false
-    lateinit private var adapter: ImagesViewAdapter
-    lateinit private var staggeredLayoutManager: StaggeredGridLayoutManager
+    private lateinit var adapter: ImagesViewAdapter
+    private lateinit var staggeredLayoutManager: StaggeredGridLayoutManager
 
     private val onItemClickListener = object : ImagesViewAdapter.OnItemClickListener {
         override fun onItemClick(view: View, file: File) {

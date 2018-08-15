@@ -1,13 +1,10 @@
 package com.lilac.priyacoder.materialdesigninkotlin
 
 import android.content.Intent
-import android.opengl.Visibility
 import android.os.Bundle
 import android.support.v7.widget.StaggeredGridLayoutManager
-import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ImageSpan
-import android.util.DisplayMetrics
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View

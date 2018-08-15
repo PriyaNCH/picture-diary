@@ -4,32 +4,25 @@ import android.animation.Animator
 import android.app.Dialog
 import android.arch.persistence.room.Room
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.drawable.Animatable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.os.PersistableBundle
-import android.util.Log
-import android.view.MotionEvent
+import android.support.v7.graphics.Palette
 import android.view.View
-import android.view.ViewGroup
 import android.view.Window
 import android.view.inputmethod.InputMethodManager
-import android.widget.ArrayAdapter
-import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.Toast
-import com.daimajia.swipe.SwipeLayout
-import com.daimajia.swipe.adapters.ArraySwipeAdapter
 import com.daimajia.swipe.util.Attributes
 import com.squareup.picasso.Picasso
+import com.squareup.picasso.Target
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_detail.*
-import kotlinx.android.synthetic.main.entries_listview.*
 import kotlinx.android.synthetic.main.preview_image.*
 import java.io.File
-import java.security.KeyStore
-
 
 class DetailActivity : BaseActivity(){
 
@@ -45,6 +38,9 @@ class DetailActivity : BaseActivity(){
     companion object {
         var database : PhotoEntryDatabase? = null
     }
+
+    // Declare target as class member so that the picasso holds a strong reference to it
+    private lateinit var target : Target
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,11 +68,15 @@ class DetailActivity : BaseActivity(){
                 ?.observeOn(AndroidSchedulers.mainThread())
                 ?.subscribe{photoEntries ->
                     entryListAdapter.clear()
-                        entryListAdapter.addAll(photoEntries)
+                    entryListAdapter.addAll(photoEntries)
                 }
 
         // Show the image selected by the user
         loadImage()
+
+        // Display the image name
+        placeTitle.maxLines = 1
+        placeTitle.isSelected = true
 
         mClickListener = View.OnClickListener { it ->
             val imageDialog = Dialog(this, android.R.style.Theme_Translucent_NoTitleBar_Fullscreen)
@@ -95,10 +95,6 @@ class DetailActivity : BaseActivity(){
         //On Touch the full image is displayed in the entire screen
         placeImageDetail.setOnClickListener(mClickListener)
 
-        // Display the image name
-        placeTitle.maxLines = 1
-        placeTitle.isSelected = true
-
         submitButton.setOnClickListener { view -> onClick(view) }
         addButton.setOnClickListener { view -> onClick(view) }
     }
@@ -111,7 +107,45 @@ class DetailActivity : BaseActivity(){
 
     private fun loadImage() {
         placeTitle.text = imageFile?.name
-        Picasso.with(this).load(imageFile).fit().centerCrop().into(placeImageDetail)
+        val imageDimensions = getFileDimensions()
+
+        target = object : Target {
+            override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
+            }
+
+            override fun onBitmapFailed(errorDrawable: Drawable?) {
+                Toast.makeText(this@DetailActivity,"Image failed to load",Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom?) {
+                assert(placeImageDetail != null)
+                placeImageDetail.setImageBitmap(bitmap)
+
+                Palette.from(bitmap)
+                        .generate { palette ->
+                            val paletteColor = palette.vibrantSwatch
+                            if(palette.vibrantSwatch != null){
+                                placeNameHolder.setBackgroundColor(paletteColor!!.rgb)
+                            }
+                        }
+            }
+        }
+
+        // Tag the target to the imageView for keeping a strong reference
+        placeImageDetail.tag = target
+        Picasso.with(this@DetailActivity)
+                .load(imageFile)
+                .resize(imageDimensions.outWidth, imageDimensions.outHeight)
+                .centerCrop()
+                .into(target)
+    }
+
+    private fun getFileDimensions() : BitmapFactory.Options {
+
+        val options = BitmapFactory.Options()
+        options.inJustDecodeBounds = true
+        BitmapFactory.decodeFile(imageFile?.absolutePath,options)
+        return options
     }
 
     private fun onClick(view: View) {
@@ -155,7 +189,6 @@ class DetailActivity : BaseActivity(){
                     addButton.setImageResource(R.drawable.icn_rotate)
                     (addButton.drawable as Animatable).start()
 
-//                  revealView.setBackgroundColor(R.string.blur_effect)
                     entryEditText.visibility = View.VISIBLE
                     entryEditText.requestFocus()
                     inputMethodMgr = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -186,7 +219,7 @@ class DetailActivity : BaseActivity(){
                     override fun onAnimationStart(p0: Animator?) { return }
 
                 })
-                submitButton.animate().x(addButton.x).setDuration(500).start()
+                submitButton.animate().x(addButton.x).setDuration(1000).start()
 
                 addButton.setImageResource(R.drawable.icn_rotate_reverse)
                 (addButton.drawable as Animatable).start()
@@ -194,13 +227,6 @@ class DetailActivity : BaseActivity(){
                 revealView.setBackgroundColor(0)
                 entryEditText.visibility = View.GONE
                 isEditMode = false
-
-//              val transAnimation = ObjectAnimator.ofFloat(submitButton,"x",20f)
-//              transAnimation.duration = 1000
-//              transAnimation.start()
-//              submitButton.visibility = View.GONE
-//              addButton.setImageResource(R.drawable.icn_rotate_reverse)
-//              (addButton.drawable as Animatable).start()
             }
         }
     }
