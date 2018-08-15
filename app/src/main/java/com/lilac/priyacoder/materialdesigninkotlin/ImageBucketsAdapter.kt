@@ -43,15 +43,6 @@ class ImageBucketsAdapter(private var context: Context,var imageData:HashMap<Str
 
         val imageFile: File = imageData[month]!![0]
         Picasso.with(context).load(imageFile).fit().centerCrop().into(holder.itemView.placeImage)
-
-//        val options = BitmapFactory.Options()
-//        options.inPreferredConfig = Bitmap.Config.ARGB_8888
-//        val bitmap = BitmapFactory.decodeFile(imageFile.absolutePath, options)
-//
-//        Palette.from(bitmap).generate { palette ->
-//            val bgColor = palette.getMutedColor(ContextCompat.getColor(context, android.R.color.black))
-//            holder.itemView.placeNameHolder.setBackgroundColor(bgColor)
-//        }
     }
 
     // 2

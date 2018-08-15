@@ -94,8 +94,9 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         val folderLocation = intent?.extras?.getString("data")
         val prefs = Prefs.getInstance(applicationContext)
+        val preferredFolderValue = prefs.getValues().getString(prefs.PREFERRED_FOLDER_KEY,null)
 
-        if(resultCode == Activity.RESULT_CANCELED && !File(prefs.PREFS_FILENAME).exists()){
+        if(resultCode == Activity.RESULT_CANCELED && preferredFolderValue==null){
             displayFolderChooserPopup()
         }
         if (requestCode == FOLDER_PICKER_CODE && resultCode == Activity.RESULT_OK) {
