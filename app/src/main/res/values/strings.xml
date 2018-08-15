@@ -15,4 +15,5 @@
   <string name="deleteEntry">Delete</string>
   <string name="hoverMessage">Swipe left to reveal the options</string>
   <string name="hint_add_note">Add a memory or note</string>
+    <string name="entry_empty_error">Entry cannot be blank</string>
 </resources>

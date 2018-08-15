@@ -201,33 +201,31 @@ class DetailActivity : BaseActivity(){
             R.id.submitButton -> {
                 if(entryEditText.text.toString().isNotEmpty()){
                     inputMethodMgr?.hideSoftInputFromWindow(entryEditText.windowToken,0)
-                    entryEditText.setBackgroundResource(0)
 
                     addPhotoEntries()
                     entryEditText.setText("")
+
+                    submitButton.animate().setListener(object:Animator.AnimatorListener {
+                        override fun onAnimationRepeat(p0: Animator?) { return }
+
+                        override fun onAnimationEnd(p0: Animator?) { submitButton.visibility = View.GONE }
+
+                        override fun onAnimationCancel(p0: Animator?) { return }
+
+                        override fun onAnimationStart(p0: Animator?) { return }
+
+                    })
+                    submitButton.animate().x(addButton.x).setDuration(1000).start()
+
+                    addButton.setImageResource(R.drawable.icn_rotate_reverse)
+                    (addButton.drawable as Animatable).start()
+
+                    revealView.setBackgroundColor(0)
+                    entryEditText.visibility = View.GONE
+                    isEditMode = false
                 } else {
-                    entryEditText.setBackgroundResource(R.drawable.border)
-                    Toast.makeText(this,"Please make an entry",Toast.LENGTH_SHORT).show()
+                    entryEditText.error = getString(R.string.entry_empty_error)
                 }
-
-                submitButton.animate().setListener(object:Animator.AnimatorListener {
-                    override fun onAnimationRepeat(p0: Animator?) { return }
-
-                    override fun onAnimationEnd(p0: Animator?) { submitButton.visibility = View.GONE }
-
-                    override fun onAnimationCancel(p0: Animator?) { return }
-
-                    override fun onAnimationStart(p0: Animator?) { return }
-
-                })
-                submitButton.animate().x(addButton.x).setDuration(1000).start()
-
-                addButton.setImageResource(R.drawable.icn_rotate_reverse)
-                (addButton.drawable as Animatable).start()
-
-                revealView.setBackgroundColor(0)
-                entryEditText.visibility = View.GONE
-                isEditMode = false
             }
         }
     }
