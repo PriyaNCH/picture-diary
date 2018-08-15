@@ -153,6 +153,7 @@ class DetailActivity : BaseActivity(){
             R.id.addButton -> {
                 if(isEditMode){
 
+                    entryEditText.setText("")
                     inputMethodMgr?.hideSoftInputFromWindow(entryEditText.windowToken,0)
                     submitButton.animate().setListener(object:Animator.AnimatorListener {
                         override fun onAnimationRepeat(p0: Animator?) { return }
