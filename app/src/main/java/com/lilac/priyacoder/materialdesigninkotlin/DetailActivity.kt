@@ -39,6 +39,8 @@ class DetailActivity : BaseActivity(){
         var database : PhotoEntryDatabase? = null
     }
 
+    private val animationDuration : Long = 1000
+
     // Declare target as class member so that the picasso holds a strong reference to it
     private lateinit var target : Target
 
@@ -158,17 +160,18 @@ class DetailActivity : BaseActivity(){
                     submitButton.animate().setListener(object:Animator.AnimatorListener {
                         override fun onAnimationRepeat(p0: Animator?) { return }
 
-                        override fun onAnimationEnd(p0: Animator?) { submitButton.visibility = View.GONE }
+                        override fun onAnimationEnd(p0: Animator?) {
+                            submitButton.visibility = View.GONE
+                            addButton.setImageResource(R.drawable.icn_rotate_reverse)
+                            (addButton.drawable as Animatable).start()
+                        }
 
                         override fun onAnimationCancel(p0: Animator?) { return }
 
                         override fun onAnimationStart(p0: Animator?) { return }
 
                     })
-                    submitButton.animate().x(addButton.x).setDuration(1000).start()
-
-                    addButton.setImageResource(R.drawable.icn_rotate_reverse)
-                    (addButton.drawable as Animatable).start()
+                    submitButton.animate().x(addButton.x).setDuration(animationDuration).start()
 
                     revealView.setBackgroundColor(0)
                     entryEditText.visibility = View.GONE
@@ -183,12 +186,13 @@ class DetailActivity : BaseActivity(){
 
                         override fun onAnimationCancel(p0: Animator?) { return }
 
-                        override fun onAnimationStart(p0: Animator?) { submitButton.visibility = View.VISIBLE }
+                        override fun onAnimationStart(p0: Animator?) {
+                            addButton.setImageResource(R.drawable.icn_rotate)
+                            (addButton.drawable as Animatable).start()
+                            submitButton.visibility = View.VISIBLE }
 
                     })
-                    submitButton.animate().x(addButton.x - 200).setDuration(1000).start()
-                    addButton.setImageResource(R.drawable.icn_rotate)
-                    (addButton.drawable as Animatable).start()
+                    submitButton.animate().x(addButton.x - 200).setDuration(animationDuration).start()
 
                     entryEditText.visibility = View.VISIBLE
                     entryEditText.requestFocus()
@@ -208,17 +212,17 @@ class DetailActivity : BaseActivity(){
                     submitButton.animate().setListener(object:Animator.AnimatorListener {
                         override fun onAnimationRepeat(p0: Animator?) { return }
 
-                        override fun onAnimationEnd(p0: Animator?) { submitButton.visibility = View.GONE }
+                        override fun onAnimationEnd(p0: Animator?) {
+                            addButton.setImageResource(R.drawable.icn_rotate_reverse)
+                            (addButton.drawable as Animatable).start()
+                            submitButton.visibility = View.GONE }
 
                         override fun onAnimationCancel(p0: Animator?) { return }
 
                         override fun onAnimationStart(p0: Animator?) { return }
 
                     })
-                    submitButton.animate().x(addButton.x).setDuration(1000).start()
-
-                    addButton.setImageResource(R.drawable.icn_rotate_reverse)
-                    (addButton.drawable as Animatable).start()
+                        submitButton.animate().x(addButton.x).setDuration(animationDuration).start()
 
                     revealView.setBackgroundColor(0)
                     entryEditText.visibility = View.GONE
