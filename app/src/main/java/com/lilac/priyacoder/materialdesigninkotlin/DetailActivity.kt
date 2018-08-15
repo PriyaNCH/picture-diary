@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory
 import android.graphics.drawable.Animatable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.support.v7.graphics.Palette
 import android.view.View
 import android.view.Window
@@ -40,6 +41,7 @@ class DetailActivity : BaseActivity(){
     }
 
     private val animationDuration : Long = 1000
+    private var paletteColor : Palette.Swatch? = null
 
     // Declare target as class member so that the picasso holds a strong reference to it
     private lateinit var target : Target
@@ -125,7 +127,7 @@ class DetailActivity : BaseActivity(){
 
                 Palette.from(bitmap)
                         .generate { palette ->
-                            val paletteColor = palette.vibrantSwatch
+                            paletteColor = palette.vibrantSwatch
                             if(palette.vibrantSwatch != null){
                                 placeNameHolder.setBackgroundColor(paletteColor!!.rgb)
                             }
@@ -155,6 +157,7 @@ class DetailActivity : BaseActivity(){
             R.id.addButton -> {
                 if(isEditMode){
 
+                    revealEditText()
                     entryEditText.setText("")
                     inputMethodMgr?.hideSoftInputFromWindow(entryEditText.windowToken,0)
                     submitButton.animate().setListener(object:Animator.AnimatorListener {
@@ -173,7 +176,6 @@ class DetailActivity : BaseActivity(){
                     })
                     submitButton.animate().x(addButton.x).setDuration(animationDuration).start()
 
-                    revealView.setBackgroundColor(0)
                     entryEditText.visibility = View.GONE
                     isEditMode = false
                 }
@@ -189,7 +191,9 @@ class DetailActivity : BaseActivity(){
                         override fun onAnimationStart(p0: Animator?) {
                             addButton.setImageResource(R.drawable.icn_rotate)
                             (addButton.drawable as Animatable).start()
-                            submitButton.visibility = View.VISIBLE }
+                            submitButton.visibility = View.VISIBLE
+                            hideEditText()
+                        }
 
                     })
                     submitButton.animate().x(addButton.x - 200).setDuration(animationDuration).start()
@@ -203,6 +207,7 @@ class DetailActivity : BaseActivity(){
             }
 
             R.id.submitButton -> {
+                revealEditText()
                 if(entryEditText.text.toString().isNotEmpty()){
                     inputMethodMgr?.hideSoftInputFromWindow(entryEditText.windowToken,0)
 
@@ -224,7 +229,6 @@ class DetailActivity : BaseActivity(){
                     })
                         submitButton.animate().x(addButton.x).setDuration(animationDuration).start()
 
-                    revealView.setBackgroundColor(0)
                     entryEditText.visibility = View.GONE
                     isEditMode = false
                 } else {
@@ -242,5 +246,16 @@ class DetailActivity : BaseActivity(){
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe()
+    }
+
+    private fun revealEditText(){
+        revealView.setBackgroundColor(0)
+    }
+    private fun hideEditText(){
+        if(paletteColor == null) {
+            revealView.setBackgroundColor(ContextCompat.getColor(this,android.R.color.transparent))
+        }else {
+            revealView.setBackgroundColor(paletteColor!!.rgb)
+        }
     }
 }
