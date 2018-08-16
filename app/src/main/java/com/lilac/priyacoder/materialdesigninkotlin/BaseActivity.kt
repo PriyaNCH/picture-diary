@@ -102,10 +102,11 @@ abstract class BaseActivity : AppCompatActivity() {
         if (requestCode == FOLDER_PICKER_CODE && resultCode == Activity.RESULT_OK) {
             // Save the user selected folder into Shared Preferences
             if(folderLocation != null) {
-                    prefs.setValue(prefs.PREFERRED_FOLDER_KEY, folderLocation)
+                prefs.setValue(prefs.PREFERRED_FOLDER_KEY, folderLocation)
 
-                    val mainActivityIntent = Intent(this.applicationContext, MainActivity::class.java)
-                    startActivity(mainActivityIntent)
+                val mainActivityIntent = Intent(this.applicationContext, MainActivity::class.java)
+                mainActivityIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                startActivity(mainActivityIntent)
             }else {
                 Toast.makeText(this,"Something went wrong! Please select folder again",Toast.LENGTH_LONG).show()
             }
