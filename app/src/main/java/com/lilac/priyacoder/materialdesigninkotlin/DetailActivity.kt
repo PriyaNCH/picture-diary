@@ -66,15 +66,6 @@ class DetailActivity : BaseActivity(){
 
         imageFile = intent!!.getSerializableExtra("file") as File
 
-        // Fetch and display entries in the list view
-        database?.photoEntryDao()?.getAllEntries(imagePath = imageFile?.absolutePath)
-                ?.subscribeOn(Schedulers.io())
-                ?.observeOn(AndroidSchedulers.mainThread())
-                ?.subscribe{photoEntries ->
-                    entryListAdapter.clear()
-                    entryListAdapter.addAll(photoEntries)
-                }
-
         // Show the image selected by the user
         loadImage()
 
@@ -101,6 +92,19 @@ class DetailActivity : BaseActivity(){
 
         submitButton.setOnClickListener { view -> onClick(view) }
         addButton.setOnClickListener { view -> onClick(view) }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Database query is made in onResume so that every time the activity is open most updated list is shown.
+        // Fetch and display entries in the list view
+        database?.photoEntryDao()?.getAllEntries(imagePath = imageFile?.absolutePath)
+                ?.subscribeOn(Schedulers.io())
+                ?.observeOn(AndroidSchedulers.mainThread())
+                ?.subscribe{photoEntries ->
+                    entryListAdapter.clear()
+                    entryListAdapter.addAll(photoEntries)
+                }
     }
 
     // Save value entered in EditText so that the value can be retained during configuration changes like orientation etc.
