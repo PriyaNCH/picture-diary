@@ -2,6 +2,8 @@ apply plugin: 'com.android.application'
 
 apply plugin: 'kotlin-android'
 
+apply plugin: 'kotlin-kapt'
+
 apply plugin: 'kotlin-android-extensions'
 
 android {
@@ -61,4 +63,9 @@ dependencies {
 
     //Android Swipe Layout
     implementation 'com.daimajia.swipelayout:library:1.2.0@aar'
+
+    //Dagger
+    implementation 'com.google.dagger:dagger:2.16'
+    kapt 'com.google.dagger:dagger-compiler:2.16'
+
 }
