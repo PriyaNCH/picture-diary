@@ -45,7 +45,7 @@ class DetailActivity : BaseActivity(){
         var database : PhotoEntryDatabase? = null
     }
 
-    private val animationDuration : Long = 1000
+    private val animationDuration : Long = 500
     private var paletteColor : Palette.Swatch? = null
 
     // Declare target as class member so that the picasso holds a strong reference to it
@@ -81,7 +81,7 @@ class DetailActivity : BaseActivity(){
         mClickListener = View.OnClickListener { it ->
             val imageDialog = Dialog(this, android.R.style.Theme_Translucent_NoTitleBar_Fullscreen)
             imageDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-            imageDialog.setCancelable(false)
+            imageDialog.setCancelable(true)
             imageDialog.setContentView(R.layout.preview_image)
 
             Picasso.with(this).load(imageFile).fit().centerCrop().into(imageDialog.preview_imageView)
