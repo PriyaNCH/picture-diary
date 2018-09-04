@@ -1,4 +1,4 @@
-package com.lilac.priyacoder.materialdesigninkotlin
+package com.lilac.priyacoder.materialdesigninkotlin.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,6 +6,9 @@ import android.support.v4.app.NavUtils
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.MenuItem
 import android.view.View
+import com.lilac.priyacoder.materialdesigninkotlin.R
+import com.lilac.priyacoder.materialdesigninkotlin.ui.adapter.ImagesViewAdapter
+import com.lilac.priyacoder.materialdesigninkotlin.ui.activity.base.BaseActivity
 import kotlinx.android.synthetic.main.images_view.*
 import java.io.File
 
@@ -20,7 +23,7 @@ class ImagesViewActivity: BaseActivity() {
 
     private val onItemClickListener = object : ImagesViewAdapter.OnItemClickListener {
         override fun onItemClick(view: View, file: File) {
-            val intent = Intent(this@ImagesViewActivity,DetailActivity::class.java)
+            val intent = Intent(this@ImagesViewActivity, DetailActivity::class.java)
             intent.putExtra("file",file)
             startActivity(intent)
         }

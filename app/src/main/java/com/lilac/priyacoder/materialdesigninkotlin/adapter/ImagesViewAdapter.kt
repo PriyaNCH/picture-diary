@@ -1,10 +1,11 @@
-package com.lilac.priyacoder.materialdesigninkotlin
+package com.lilac.priyacoder.materialdesigninkotlin.ui.adapter
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.lilac.priyacoder.materialdesigninkotlin.R
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.image_buckets.view.*
 import java.io.File

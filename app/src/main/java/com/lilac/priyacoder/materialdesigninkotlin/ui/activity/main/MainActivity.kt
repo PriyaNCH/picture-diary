@@ -1,4 +1,4 @@
-package com.lilac.priyacoder.materialdesigninkotlin
+package com.lilac.priyacoder.materialdesigninkotlin.ui.activity.main
 
 import android.content.Intent
 import android.os.Bundle
@@ -12,6 +12,12 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.lilac.priyacoder.materialdesigninkotlin.*
+import com.lilac.priyacoder.materialdesigninkotlin.ui.activity.ImagesViewActivity
+import com.lilac.priyacoder.materialdesigninkotlin.ui.adapter.ImageBucketsAdapter
+import com.lilac.priyacoder.materialdesigninkotlin.ui.preferences.Prefs
+import com.lilac.priyacoder.materialdesigninkotlin.ui.activity.base.BaseActivity
+import com.lilac.priyacoder.materialdesigninkotlin.ui.activity.base.getDisplayMetrics
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 
@@ -23,7 +29,7 @@ class MainActivity : BaseActivity() {
 
     private val onItemClickListener = object : ImageBucketsAdapter.OnItemClickListener {
         override fun onItemClick(view: View, imageMap: HashMap<String,List<File>>, monthCode: String) {
-            val intent = Intent(this@MainActivity,ImagesViewActivity::class.java)
+            val intent = Intent(this@MainActivity, ImagesViewActivity::class.java)
             intent.putExtra("imageMap",imageMap)
             intent.putExtra("monthCode",monthCode)
             startActivity(intent)
@@ -73,7 +79,7 @@ class MainActivity : BaseActivity() {
 
                 //Create a textview to prompt user to click on the folder icon in the app bar
                 val click_folderIcon_textView = TextView(this)
-                val imageSpan = ImageSpan(this,R.drawable.ic_open_folder)
+                val imageSpan = ImageSpan(this, R.drawable.ic_open_folder)
                 val spannableString = SpannableString(getString(R.string.click_folder_icon))
 
                 // Add the folder icon at the index given for illustration

@@ -1,4 +1,4 @@
-package com.lilac.priyacoder.materialdesigninkotlin
+package com.lilac.priyacoder.materialdesigninkotlin.data.local.db.model
 
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity

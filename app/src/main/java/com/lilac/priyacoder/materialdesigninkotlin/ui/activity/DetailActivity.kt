@@ -1,4 +1,4 @@
-package com.lilac.priyacoder.materialdesigninkotlin
+package com.lilac.priyacoder.materialdesigninkotlin.ui.activity
 
 import android.animation.Animator
 import android.app.Dialog
@@ -16,6 +16,11 @@ import android.view.Window
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.daimajia.swipe.util.Attributes
+import com.lilac.priyacoder.materialdesigninkotlin.R
+import com.lilac.priyacoder.materialdesigninkotlin.data.local.db.PhotoEntryDatabase
+import com.lilac.priyacoder.materialdesigninkotlin.data.local.db.model.PhotoEntriesModel
+import com.lilac.priyacoder.materialdesigninkotlin.ui.adapter.EntryListAdapter
+import com.lilac.priyacoder.materialdesigninkotlin.ui.activity.base.BaseActivity
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
 import io.reactivex.Single
@@ -54,7 +59,7 @@ class DetailActivity : BaseActivity(){
         if(savedInstanceState != null){
             entryEditText.setText(savedInstanceState.getString(getString(R.string.editTextValue)))
         }
-        entryListAdapter = EntryListAdapter(this,R.layout.entries_listview,R.id.text_data)
+        entryListAdapter = EntryListAdapter(this, R.layout.entries_listview, R.id.text_data)
         entriesList.adapter = entryListAdapter
         entryListAdapter.mode = Attributes.Mode.Single
 
@@ -243,10 +248,10 @@ class DetailActivity : BaseActivity(){
     }
 
     private fun addPhotoEntries(){
-        val photoEntries = PhotoEntriesModel(0,imageFile?.absolutePath,entryEditText.text.toString())
+        val photoEntries = PhotoEntriesModel(0, imageFile?.absolutePath, entryEditText.text.toString())
 
         Single.fromCallable {
-            DetailActivity.database?.photoEntryDao()?.insert(photoEntries) }
+            database?.photoEntryDao()?.insert(photoEntries) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe()

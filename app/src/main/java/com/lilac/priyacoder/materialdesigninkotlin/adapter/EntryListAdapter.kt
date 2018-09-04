@@ -1,4 +1,4 @@
-package com.lilac.priyacoder.materialdesigninkotlin
+package com.lilac.priyacoder.materialdesigninkotlin.ui.adapter
 
 import android.app.AlertDialog
 import android.content.Context
@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import com.daimajia.swipe.adapters.ArraySwipeAdapter
-import com.lilac.priyacoder.materialdesigninkotlin.DetailActivity.Companion.database
+import com.lilac.priyacoder.materialdesigninkotlin.ui.activity.DetailActivity.Companion.database
+import com.lilac.priyacoder.materialdesigninkotlin.R
+import com.lilac.priyacoder.materialdesigninkotlin.data.local.db.model.PhotoEntriesModel
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -22,7 +24,7 @@ class EntryListAdapter(context: Context?, resource: Int, textViewResourceId : In
     var textResId : Int = textViewResourceId
 
     init{
-        photoEntryObject = PhotoEntriesModel(0,"","")
+        photoEntryObject = PhotoEntriesModel(0, "", "")
     }
     override fun getSwipeLayoutResourceId(position: Int): Int {
         return R.id.swipe

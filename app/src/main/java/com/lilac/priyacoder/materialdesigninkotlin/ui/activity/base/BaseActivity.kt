@@ -1,4 +1,4 @@
-package com.lilac.priyacoder.materialdesigninkotlin
+package com.lilac.priyacoder.materialdesigninkotlin.ui.activity.base
 
 import android.Manifest
 import android.app.Activity
@@ -15,6 +15,9 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import com.lilac.priyacoder.materialdesigninkotlin.ui.preferences.Prefs
+import com.lilac.priyacoder.materialdesigninkotlin.R
+import com.lilac.priyacoder.materialdesigninkotlin.ui.activity.main.MainActivity
 import lib.folderpicker.FolderPicker
 import java.io.File
 import java.text.DateFormat

@@ -1,8 +1,9 @@
-package com.lilac.priyacoder.materialdesigninkotlin
+package com.lilac.priyacoder.materialdesigninkotlin.ui.preferences
 
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
+import com.lilac.priyacoder.materialdesigninkotlin.singleton.SingletonHolder
 
 class Prefs private constructor(context: Context) {
     val PREFS_FILENAME = "MY_APP_PREFS"

@@ -1,8 +1,8 @@
-package com.lilac.priyacoder.materialdesigninkotlin
+package com.lilac.priyacoder.materialdesigninkotlin.data.local.db.dao
 
 import android.arch.persistence.room.*
+import com.lilac.priyacoder.materialdesigninkotlin.data.local.db.model.PhotoEntriesModel
 import io.reactivex.Flowable
-import org.intellij.lang.annotations.Flow
 
 @Dao
 interface PhotoEntryDao{
