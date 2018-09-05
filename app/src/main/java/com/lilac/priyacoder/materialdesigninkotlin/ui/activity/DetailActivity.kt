@@ -107,8 +107,7 @@ class DetailActivity : BaseActivity(){
         super.onResume()
         // Database query is made in onResume so that every time the activity is open most updated list is shown.
         // Fetch and display entries in the list view
-        database?.photoEntryDao()?.getAllEntries(imagePath = imageFile?.absolutePath)
-                ?.subscribeOn(Schedulers.io())
+        database.photoEntryDao().getAllEntries(imagePath = imageFile?.absolutePath).subscribeOn(Schedulers.io())
                 ?.observeOn(AndroidSchedulers.mainThread())
                 ?.subscribe{photoEntries ->
                     entryListAdapter.clear()
@@ -150,16 +149,10 @@ class DetailActivity : BaseActivity(){
 
         // Tag the target to the imageView for keeping a strong reference
         placeImageDetail.tag = target
-        Picasso.with(this@DetailActivity)
-                .load(imageFile)
-                .resize(imageDimensions.outWidth, imageDimensions.outHeight)
-                .centerCrop()
-                .into(target)
-    }
 
-    private fun getImageViewDimensions(imageView: ImageView){
-
+        imageLoader.loadToImageView(imageFile as File,target,imageDimensions.outWidth, imageDimensions.outHeight)
     }
+    
     private fun getFileDimensions() : BitmapFactory.Options {
 
         val options = BitmapFactory.Options()
