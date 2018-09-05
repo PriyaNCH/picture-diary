@@ -16,6 +16,7 @@ import android.view.Window
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.daimajia.swipe.util.Attributes
+import com.lilac.priyacoder.materialdesigninkotlin.PhotoDiaryApp
 import com.lilac.priyacoder.materialdesigninkotlin.R
 import com.lilac.priyacoder.materialdesigninkotlin.data.local.db.PhotoEntryDatabase
 import com.lilac.priyacoder.materialdesigninkotlin.data.local.db.model.PhotoEntriesModel
@@ -29,6 +30,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_detail.*
 import kotlinx.android.synthetic.main.preview_image.*
 import java.io.File
+import javax.inject.Inject
 
 class DetailActivity : BaseActivity(){
 
@@ -41,9 +43,7 @@ class DetailActivity : BaseActivity(){
 
     var inputMethodMgr : InputMethodManager? = null
 
-    companion object {
-        var database : PhotoEntryDatabase? = null
-    }
+    @Inject lateinit var database : PhotoEntryDatabase
 
     private val animationDuration : Long = 500
     private var paletteColor : Palette.Swatch? = null
@@ -52,6 +52,7 @@ class DetailActivity : BaseActivity(){
     private lateinit var target : Target
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        initAppComponent()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
 
@@ -62,9 +63,6 @@ class DetailActivity : BaseActivity(){
         entryListAdapter = EntryListAdapter(this, R.layout.entries_listview, R.id.text_data)
         entriesList.adapter = entryListAdapter
         entryListAdapter.mode = Attributes.Mode.Single
-
-        // Initialize database to fetch or insert entries of the photo from/to database
-        database = Room.databaseBuilder(this, PhotoEntryDatabase::class.java,"photo-diary-database").build()
 
         // Set this property to remove the Grid Toggle button in the app bar as it is not required
         super.showGridToggle = false
@@ -97,6 +95,10 @@ class DetailActivity : BaseActivity(){
 
         submitButton.setOnClickListener { view -> onClick(view) }
         addButton.setOnClickListener { view -> onClick(view) }
+    }
+
+    private fun initAppComponent(){
+        PhotoDiaryApp.app()?.appComponent()?.inject(this)
     }
 
     override fun onResume() {
@@ -267,4 +269,5 @@ class DetailActivity : BaseActivity(){
             revealView.setBackgroundColor(paletteColor!!.rgb)
         }
     }
+
 }
