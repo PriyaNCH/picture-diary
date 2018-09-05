@@ -3,6 +3,7 @@ package com.lilac.priyacoder.materialdesigninkotlin.di.module
 import android.arch.persistence.room.Room
 import android.content.Context
 import com.lilac.priyacoder.materialdesigninkotlin.data.local.db.PhotoEntryDatabase
+import com.lilac.priyacoder.materialdesigninkotlin.di.model.ImageLoader
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -16,4 +17,6 @@ class AppModule(val context : Context) {
     @Singleton @Provides
     fun provideRoomDatabase(context: Context) : PhotoEntryDatabase = Room.databaseBuilder(context, PhotoEntryDatabase::class.java,"photo-diary-database").build()
 
+    @Singleton @Provides
+    fun provideImageLoader(context: Context) : ImageLoader = ImageLoader(context)
 }

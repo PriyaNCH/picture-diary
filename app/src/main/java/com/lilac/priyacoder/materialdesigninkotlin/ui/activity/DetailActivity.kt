@@ -14,12 +14,14 @@ import android.support.v7.graphics.Palette
 import android.view.View
 import android.view.Window
 import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
 import android.widget.Toast
 import com.daimajia.swipe.util.Attributes
 import com.lilac.priyacoder.materialdesigninkotlin.PhotoDiaryApp
 import com.lilac.priyacoder.materialdesigninkotlin.R
 import com.lilac.priyacoder.materialdesigninkotlin.data.local.db.PhotoEntryDatabase
 import com.lilac.priyacoder.materialdesigninkotlin.data.local.db.model.PhotoEntriesModel
+import com.lilac.priyacoder.materialdesigninkotlin.di.model.ImageLoader
 import com.lilac.priyacoder.materialdesigninkotlin.ui.adapter.EntryListAdapter
 import com.lilac.priyacoder.materialdesigninkotlin.ui.activity.base.BaseActivity
 import com.squareup.picasso.Picasso
@@ -44,6 +46,7 @@ class DetailActivity : BaseActivity(){
     var inputMethodMgr : InputMethodManager? = null
 
     @Inject lateinit var database : PhotoEntryDatabase
+    @Inject lateinit var imageLoader : ImageLoader
 
     private val animationDuration : Long = 500
     private var paletteColor : Palette.Swatch? = null
@@ -67,7 +70,7 @@ class DetailActivity : BaseActivity(){
         // Set this property to remove the Grid Toggle button in the app bar as it is not required
         super.showGridToggle = false
 
-        imageFile = intent!!.getSerializableExtra("file") as File
+        imageFile = intent?.getSerializableExtra("file") as File
 
         // Show the image selected by the user
         loadImage()
@@ -82,8 +85,7 @@ class DetailActivity : BaseActivity(){
             imageDialog.setCancelable(true)
             imageDialog.setContentView(R.layout.preview_image)
 
-            Picasso.with(this).load(imageFile).fit().centerCrop().into(imageDialog.preview_imageView)
-
+            imageLoader.loadToImageView(imageFile as File,imageDialog.preview_imageView)
             imageDialog.close_image_preview_button.setOnClickListener {
                 imageDialog.dismiss()
             }
@@ -155,6 +157,9 @@ class DetailActivity : BaseActivity(){
                 .into(target)
     }
 
+    private fun getImageViewDimensions(imageView: ImageView){
+
+    }
     private fun getFileDimensions() : BitmapFactory.Options {
 
         val options = BitmapFactory.Options()
