@@ -2,20 +2,15 @@ package com.lilac.priyacoder.materialdesigninkotlin.ui.adapter
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
-import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.lilac.priyacoder.materialdesigninkotlin.R
 import com.lilac.priyacoder.materialdesigninkotlin.di.model.ImageLoader
 import com.lilac.priyacoder.materialdesigninkotlin.utils.MonthComparator
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.image_buckets.view.*
-import kotlinx.android.synthetic.main.preview_image.*
 import java.io.File
 import java.util.function.Consumer
-import javax.inject.Inject
-import kotlin.collections.HashMap
 
 
 /**

@@ -6,19 +6,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.lilac.priyacoder.materialdesigninkotlin.R
-import com.squareup.picasso.Picasso
+import com.lilac.priyacoder.materialdesigninkotlin.di.model.ImageLoader
 import kotlinx.android.synthetic.main.image_buckets.view.*
 import java.io.File
 
 /**
  * Created by Vishnu Priya Nallan on 10/16/2017.
  */
-class ImagesViewAdapter(private var context: Context, var listOfFiles:List<File>?) : RecyclerView.Adapter<ImagesViewAdapter.ViewHolder>() {
+class ImagesViewAdapter(private var context: Context, var listOfFiles:List<File>?, imageviewLoader  : ImageLoader) : RecyclerView.Adapter<ImagesViewAdapter.ViewHolder>() {
 
     lateinit var itemClickListener: OnItemClickListener
 
     override fun getItemCount() = listOfFiles?.size!!
 
+    private var imageLoader : ImageLoader = imageviewLoader
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.row_photo, parent, false)
@@ -28,7 +29,7 @@ class ImagesViewAdapter(private var context: Context, var listOfFiles:List<File>
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val imageFile: File = listOfFiles!![position]
-        Picasso.with(context).load(imageFile).fit().centerCrop().into(holder.itemView.placeImage )
+        imageLoader.loadToImageView(imageFile,holder.itemView.placeImage)
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {

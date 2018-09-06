@@ -6,11 +6,14 @@ import android.support.v4.app.NavUtils
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.MenuItem
 import android.view.View
+import com.lilac.priyacoder.materialdesigninkotlin.PhotoDiaryApp
 import com.lilac.priyacoder.materialdesigninkotlin.R
+import com.lilac.priyacoder.materialdesigninkotlin.di.model.ImageLoader
 import com.lilac.priyacoder.materialdesigninkotlin.ui.adapter.ImagesViewAdapter
 import com.lilac.priyacoder.materialdesigninkotlin.ui.activity.base.BaseActivity
 import kotlinx.android.synthetic.main.images_view.*
 import java.io.File
+import javax.inject.Inject
 
 /**
  * Created by 1021422 on 10/15/2017.
@@ -20,6 +23,7 @@ class ImagesViewActivity: BaseActivity() {
     private var isListView: Boolean = false
     private lateinit var adapter: ImagesViewAdapter
     private lateinit var staggeredLayoutManager: StaggeredGridLayoutManager
+    @Inject lateinit var imageLoader : ImageLoader
 
     private val onItemClickListener = object : ImagesViewAdapter.OnItemClickListener {
         override fun onItemClick(view: View, file: File) {
@@ -29,6 +33,7 @@ class ImagesViewActivity: BaseActivity() {
         }
     }
     override fun onCreate(savedInstanceState: Bundle?) {
+        initAppComponent()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.images_view)
 
@@ -43,7 +48,7 @@ class ImagesViewActivity: BaseActivity() {
         staggeredLayoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
         imagelist.layoutManager = staggeredLayoutManager
 
-        adapter = ImagesViewAdapter(this, listOfFiles)
+        adapter = ImagesViewAdapter(this, listOfFiles, imageLoader)
         imagelist.adapter = adapter
 
         adapter.setOnItemClickListener(onItemClickListener)
@@ -85,5 +90,9 @@ class ImagesViewActivity: BaseActivity() {
         item.setIcon(R.drawable.ic_action_list)
         item.title = getString(R.string.show_as_list)
         isListView = false
+    }
+
+    private fun initAppComponent(){
+        PhotoDiaryApp.app()?.appComponent()?.inject(this)
     }
 }
