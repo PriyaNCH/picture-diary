@@ -13,6 +13,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.lilac.priyacoder.materialdesigninkotlin.*
+import com.lilac.priyacoder.materialdesigninkotlin.di.model.ImageLoader
 import com.lilac.priyacoder.materialdesigninkotlin.ui.activity.ImagesViewActivity
 import com.lilac.priyacoder.materialdesigninkotlin.ui.adapter.ImageBucketsAdapter
 import com.lilac.priyacoder.materialdesigninkotlin.ui.preferences.Prefs
@@ -20,12 +21,14 @@ import com.lilac.priyacoder.materialdesigninkotlin.ui.activity.base.BaseActivity
 import com.lilac.priyacoder.materialdesigninkotlin.ui.activity.base.getDisplayMetrics
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
+import javax.inject.Inject
 
 class MainActivity : BaseActivity() {
 
     private lateinit var staggeredLayoutManager: StaggeredGridLayoutManager
     private var isListView: Boolean = false
     private lateinit var imageBucketAdapter: ImageBucketsAdapter
+    @Inject lateinit var imageLoader : ImageLoader
 
     private val onItemClickListener = object : ImageBucketsAdapter.OnItemClickListener {
         override fun onItemClick(view: View, imageMap: HashMap<String,List<File>>, monthCode: String) {
@@ -37,6 +40,7 @@ class MainActivity : BaseActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        initAppComponent()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -56,7 +60,7 @@ class MainActivity : BaseActivity() {
                 staggeredLayoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
                 list.layoutManager = staggeredLayoutManager
 
-                imageBucketAdapter = ImageBucketsAdapter(this, imageMap)
+                imageBucketAdapter = ImageBucketsAdapter(this, imageMap, imageLoader)
                 imageBucketAdapter.loadData()
                 list.adapter = imageBucketAdapter
 
@@ -133,6 +137,10 @@ class MainActivity : BaseActivity() {
         item.setIcon(R.drawable.ic_action_list)
         item.title = getString(R.string.show_as_list)
         isListView = false
+    }
+
+    private fun initAppComponent(){
+        PhotoDiaryApp.app()?.appComponent()?.inject(this)
     }
 }
 

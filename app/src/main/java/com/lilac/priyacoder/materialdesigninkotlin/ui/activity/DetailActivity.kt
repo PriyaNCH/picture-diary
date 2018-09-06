@@ -2,7 +2,6 @@ package com.lilac.priyacoder.materialdesigninkotlin.ui.activity
 
 import android.animation.Animator
 import android.app.Dialog
-import android.arch.persistence.room.Room
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -14,7 +13,6 @@ import android.support.v7.graphics.Palette
 import android.view.View
 import android.view.Window
 import android.view.inputmethod.InputMethodManager
-import android.widget.ImageView
 import android.widget.Toast
 import com.daimajia.swipe.util.Attributes
 import com.lilac.priyacoder.materialdesigninkotlin.PhotoDiaryApp
@@ -22,8 +20,8 @@ import com.lilac.priyacoder.materialdesigninkotlin.R
 import com.lilac.priyacoder.materialdesigninkotlin.data.local.db.PhotoEntryDatabase
 import com.lilac.priyacoder.materialdesigninkotlin.data.local.db.model.PhotoEntriesModel
 import com.lilac.priyacoder.materialdesigninkotlin.di.model.ImageLoader
-import com.lilac.priyacoder.materialdesigninkotlin.ui.adapter.EntryListAdapter
 import com.lilac.priyacoder.materialdesigninkotlin.ui.activity.base.BaseActivity
+import com.lilac.priyacoder.materialdesigninkotlin.ui.adapter.EntryListAdapter
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
 import io.reactivex.Single
@@ -152,7 +150,7 @@ class DetailActivity : BaseActivity(){
 
         imageLoader.loadToImageView(imageFile as File,target,imageDimensions.outWidth, imageDimensions.outHeight)
     }
-    
+
     private fun getFileDimensions() : BitmapFactory.Options {
 
         val options = BitmapFactory.Options()

@@ -2,26 +2,31 @@ package com.lilac.priyacoder.materialdesigninkotlin.ui.adapter
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.lilac.priyacoder.materialdesigninkotlin.R
+import com.lilac.priyacoder.materialdesigninkotlin.di.model.ImageLoader
 import com.lilac.priyacoder.materialdesigninkotlin.utils.MonthComparator
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.image_buckets.view.*
+import kotlinx.android.synthetic.main.preview_image.*
 import java.io.File
 import java.util.function.Consumer
+import javax.inject.Inject
 import kotlin.collections.HashMap
 
 
 /**
  * Created by 1021422 on 10/10/2017.
  */
-class ImageBucketsAdapter(private var context: Context,var imageData:HashMap<String,List<File>>)
+class ImageBucketsAdapter (private var context: Context, var imageData:HashMap<String,List<File>>, imageviewLoader : ImageLoader)
     : RecyclerView.Adapter<ImageBucketsAdapter.ViewHolder>() {
 
     lateinit var itemClickListener: OnItemClickListener
     lateinit var listOfMonth: MutableList<String>
+    private var imageLoader : ImageLoader = imageviewLoader
     // 1
     override fun getItemCount() = imageData.keys.size
 
@@ -40,7 +45,7 @@ class ImageBucketsAdapter(private var context: Context,var imageData:HashMap<Str
         holder.itemView.placeName.text = month
 
         val imageFile: File = imageData[month]!![0]
-        Picasso.with(context).load(imageFile).fit().centerCrop().into(holder.itemView.placeImage)
+        imageLoader.loadToImageView(imageFile,holder.itemView.placeImage)
     }
 
     // 2

@@ -24,8 +24,7 @@ class EntryListAdapter(context: Context?, var resource: Int, textViewResourceId 
 
     init{
         photoEntryObject = PhotoEntriesModel(0, "", "")
-        val detailActivity = context as DetailActivity
-        database = detailActivity.database
+        database = (context as DetailActivity).database
     }
     override fun getSwipeLayoutResourceId(position: Int): Int {
         return R.id.swipe
