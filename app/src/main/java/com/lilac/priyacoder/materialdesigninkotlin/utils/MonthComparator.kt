@@ -5,7 +5,6 @@ package com.lilac.priyacoder.materialdesigninkotlin.utils
  */
 class MonthComparator {
 
-
     companion object : Comparator<String> {
 
         private val months =  arrayOf("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec")

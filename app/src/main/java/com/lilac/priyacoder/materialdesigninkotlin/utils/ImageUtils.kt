@@ -5,6 +5,7 @@ import java.io.File
 
 class ImageUtils{
     companion object {
+        //Pass an image file to get its dimensions
         fun getFileDimensions(imageFile: File?): BitmapFactory.Options {
 
             val options = BitmapFactory.Options()
