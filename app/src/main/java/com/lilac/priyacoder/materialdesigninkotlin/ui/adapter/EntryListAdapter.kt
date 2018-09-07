@@ -9,8 +9,8 @@ import android.widget.TextView
 import android.widget.Toast
 import com.daimajia.swipe.adapters.ArraySwipeAdapter
 import com.lilac.priyacoder.materialdesigninkotlin.R
-import com.lilac.priyacoder.materialdesigninkotlin.data.local.db.PhotoEntryDatabase
-import com.lilac.priyacoder.materialdesigninkotlin.data.local.db.model.PhotoEntriesModel
+import com.lilac.priyacoder.materialdesigninkotlin.data.db.PhotoEntryDatabase
+import com.lilac.priyacoder.materialdesigninkotlin.data.db.model.PhotoEntriesModel
 import com.lilac.priyacoder.materialdesigninkotlin.ui.activity.DetailActivity
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers

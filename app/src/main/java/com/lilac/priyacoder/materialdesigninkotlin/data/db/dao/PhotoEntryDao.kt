@@ -1,7 +1,7 @@
-package com.lilac.priyacoder.materialdesigninkotlin.data.local.db.dao
+package com.lilac.priyacoder.materialdesigninkotlin.data.db.dao
 
 import android.arch.persistence.room.*
-import com.lilac.priyacoder.materialdesigninkotlin.data.local.db.model.PhotoEntriesModel
+import com.lilac.priyacoder.materialdesigninkotlin.data.db.model.PhotoEntriesModel
 import io.reactivex.Flowable
 
 @Dao
@@ -17,15 +17,15 @@ interface PhotoEntryDao{
     fun updateEntries(id : Long, entry : String)
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    fun update(photoEntryModel : PhotoEntriesModel)
+    fun update(photoEntryModel : PhotoEntriesModel) : Int
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(photoEntryModel : PhotoEntriesModel)
+    fun insert(photoEntryModel : PhotoEntriesModel) : Long
 
     @Query("DELETE from photoEntries where imageFullPath = :imagePath")
     fun deleteAllByImage(imagePath: String)
 
     @Delete
-    fun deletePhotoEntry(photoEntryModel : PhotoEntriesModel)
+    fun deletePhotoEntry(photoEntryModel : PhotoEntriesModel) : Int
 
 }

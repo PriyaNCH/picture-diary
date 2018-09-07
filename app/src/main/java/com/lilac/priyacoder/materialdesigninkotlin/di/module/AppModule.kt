@@ -2,7 +2,7 @@ package com.lilac.priyacoder.materialdesigninkotlin.di.module
 
 import android.arch.persistence.room.Room
 import android.content.Context
-import com.lilac.priyacoder.materialdesigninkotlin.data.local.db.PhotoEntryDatabase
+import com.lilac.priyacoder.materialdesigninkotlin.data.db.PhotoEntryDatabase
 import com.lilac.priyacoder.materialdesigninkotlin.di.model.ImageLoader
 import dagger.Module
 import dagger.Provides

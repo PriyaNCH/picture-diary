@@ -4,7 +4,6 @@ import android.animation.Animator
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.drawable.Animatable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -17,8 +16,8 @@ import android.widget.Toast
 import com.daimajia.swipe.util.Attributes
 import com.lilac.priyacoder.materialdesigninkotlin.PhotoDiaryApp
 import com.lilac.priyacoder.materialdesigninkotlin.R
-import com.lilac.priyacoder.materialdesigninkotlin.data.local.db.PhotoEntryDatabase
-import com.lilac.priyacoder.materialdesigninkotlin.data.local.db.model.PhotoEntriesModel
+import com.lilac.priyacoder.materialdesigninkotlin.data.db.PhotoEntryDatabase
+import com.lilac.priyacoder.materialdesigninkotlin.data.db.model.PhotoEntriesModel
 import com.lilac.priyacoder.materialdesigninkotlin.di.model.ImageLoader
 import com.lilac.priyacoder.materialdesigninkotlin.ui.activity.base.BaseActivity
 import com.lilac.priyacoder.materialdesigninkotlin.ui.adapter.EntryListAdapter
