@@ -22,6 +22,7 @@ import com.lilac.priyacoder.materialdesigninkotlin.data.local.db.model.PhotoEntr
 import com.lilac.priyacoder.materialdesigninkotlin.di.model.ImageLoader
 import com.lilac.priyacoder.materialdesigninkotlin.ui.activity.base.BaseActivity
 import com.lilac.priyacoder.materialdesigninkotlin.ui.adapter.EntryListAdapter
+import com.lilac.priyacoder.materialdesigninkotlin.utils.ImageUtils
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
 import io.reactivex.Single
@@ -121,7 +122,7 @@ class DetailActivity : BaseActivity(){
 
     private fun loadImage() {
         placeTitle.text = imageFile?.name
-        val imageDimensions = getFileDimensions()
+        val imageDimensions = ImageUtils.getFileDimensions(imageFile)
 
         target = object : Target {
             override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
@@ -149,14 +150,6 @@ class DetailActivity : BaseActivity(){
         placeImageDetail.tag = target
 
         imageLoader.loadToImageView(imageFile as File,target,imageDimensions.outWidth, imageDimensions.outHeight)
-    }
-
-    private fun getFileDimensions() : BitmapFactory.Options {
-
-        val options = BitmapFactory.Options()
-        options.inJustDecodeBounds = true
-        BitmapFactory.decodeFile(imageFile?.absolutePath,options)
-        return options
     }
 
     private fun onClick(view: View) {
@@ -249,7 +242,8 @@ class DetailActivity : BaseActivity(){
         val photoEntries = PhotoEntriesModel(0, imageFile?.absolutePath, entryEditText.text.toString())
 
         Single.fromCallable {
-            database?.photoEntryDao()?.insert(photoEntries) }
+            database.photoEntryDao().insert(photoEntries)
+        }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe()
