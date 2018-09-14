@@ -115,7 +115,7 @@ class MainActivity : BaseActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    fun toggle() {
+    private fun toggle() {
         if (isListView) {
             staggeredLayoutManager.spanCount = 2
             showGridView()
@@ -125,14 +125,14 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    fun showListView() {
+    private fun showListView() {
         val item = menu.findItem(R.id.action_toggle)
         item.setIcon(R.drawable.ic_action_grid)
         item.title = getString(R.string.show_as_grid)
         isListView = true
     }
 
-    fun showGridView() {
+    private fun showGridView() {
         val item = menu.findItem(R.id.action_toggle)
         item.setIcon(R.drawable.ic_action_list)
         item.title = getString(R.string.show_as_list)

@@ -11,11 +11,13 @@ import javax.inject.Singleton
 @Module
 class AppModule(val context : Context) {
 
+    private val databaseName : String = "photo-diary-database"
+
     @Singleton @Provides
     fun providesContext() : Context = context
 
     @Singleton @Provides
-    fun provideRoomDatabase(context: Context) : PhotoEntryDatabase = Room.databaseBuilder(context, PhotoEntryDatabase::class.java,"photo-diary-database").build()
+    fun provideRoomDatabase(context: Context) : PhotoEntryDatabase = Room.databaseBuilder(context, PhotoEntryDatabase::class.java,databaseName).build()
 
     @Singleton @Provides
     fun provideImageLoader(context: Context) : ImageLoader = ImageLoader(context)

@@ -51,7 +51,7 @@ class EntryListAdapter(context: Context?, var resource: Int, textViewResourceId 
         viewHolder.textData?.text = photoEntryObject.photoEntry
 
         returnView?.findViewById<View>(R.id.editEntry)?.setOnClickListener {
-                showEditWindow(viewHolder.textData,parent, position) // Need to remove textData and in the function directly call textResourceId instead of entryview
+            showEditWindow(viewHolder.textData,parent, position) // Need to remove textData and in the function directly call textResourceId instead of entryview
         }
         returnView?.findViewById<View>(R.id.deleteEntry)?.setOnClickListener {
             deleteEntry(position)
@@ -81,10 +81,11 @@ class EntryListAdapter(context: Context?, var resource: Int, textViewResourceId 
                 photoEntryObject = getItem(clickedIndex) as PhotoEntriesModel
                 photoEntryObject.setEntry(editedText.toString())
                 Single.fromCallable{
-                    database?.photoEntryDao()?.update(photoEntryObject)}
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe()
+                    database.photoEntryDao().update(photoEntryObject)
+                }
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe()
                 this.notifyDataSetChanged()
             } else{
                 Toast.makeText(context,"Entry must be made before saving",Toast.LENGTH_SHORT).show()
@@ -98,13 +99,25 @@ class EntryListAdapter(context: Context?, var resource: Int, textViewResourceId 
 
     fun deleteEntry(clickedIndex : Int){
         photoEntryObject = getItem(clickedIndex) as PhotoEntriesModel
-        Single.fromCallable{
-            database.photoEntryDao().deletePhotoEntry(photoEntryObject)
-        }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe()
-        this.notifyDataSetChanged()
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle("Delete Entry")
+                .setMessage("Are you sure to delete the entry?")
+                .setPositiveButton("Delete") { dialog, which ->
+                    dialog.dismiss()
+
+                    Single.fromCallable{
+                        database.photoEntryDao().deletePhotoEntry(photoEntryObject)
+                    }
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe()
+                    this.notifyDataSetChanged()
+                }
+                .setNegativeButton("Cancel") { dialog, which ->
+                    dialog.dismiss()
+                }
+                .create()
+                .show()
     }
 }
 

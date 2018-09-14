@@ -13,6 +13,9 @@ interface PhotoEntryDao{
     @Query("Select * from photoEntries where imageFullPath = :imagePath")
     fun getAllEntries(imagePath : String?) : Flowable<List<PhotoEntriesModel>>
 
+    @Query("Select * from photoEntries")
+    fun getAllEntriesByList() : List<PhotoEntriesModel>
+
     @Query("Update photoEntries set photoEntry = :entry where photoEntryId = :id")
     fun updateEntries(id : Long, entry : String)
 
@@ -22,10 +25,9 @@ interface PhotoEntryDao{
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(photoEntryModel : PhotoEntriesModel) : Long
 
-    @Query("DELETE from photoEntries where imageFullPath = :imagePath")
+    @Query("Delete from photoEntries where imageFullPath = :imagePath")
     fun deleteAllByImage(imagePath: String)
 
     @Delete
     fun deletePhotoEntry(photoEntryModel : PhotoEntriesModel) : Int
-
 }
