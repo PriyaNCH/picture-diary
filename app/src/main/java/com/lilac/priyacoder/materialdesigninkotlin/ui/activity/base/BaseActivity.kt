@@ -26,7 +26,7 @@ import java.util.*
 import kotlin.collections.HashMap
 
 /**
- * Created by 1021422 on 10/15/2017.
+ * Created by Vishnu Priya Nallan on 10/15/2017.
  */
 abstract class BaseActivity : AppCompatActivity() {
 

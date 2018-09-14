@@ -14,7 +14,7 @@ import java.util.function.Consumer
 
 
 /**
- * Created by 1021422 on 10/10/2017.
+ * Created by Vishnu Priya Nallan on 10/10/2017.
  */
 class ImageBucketsAdapter (private var context: Context, var imageData:HashMap<String,List<File>>, imageviewLoader : ImageLoader)
     : RecyclerView.Adapter<ImageBucketsAdapter.ViewHolder>() {
@@ -22,16 +22,14 @@ class ImageBucketsAdapter (private var context: Context, var imageData:HashMap<S
     lateinit var itemClickListener: OnItemClickListener
     lateinit var listOfMonth: MutableList<String>
     private var imageLoader : ImageLoader = imageviewLoader
-    // 1
+
     override fun getItemCount() = imageData.keys.size
 
-    // 2
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.image_buckets, parent, false)
         return ViewHolder(itemView)
     }
 
-    // 3
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val month = listOfMonth[position]
@@ -43,7 +41,6 @@ class ImageBucketsAdapter (private var context: Context, var imageData:HashMap<S
         imageLoader.loadToImageView(imageFile,holder.itemView.placeImage)
     }
 
-    // 2
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
         init {
@@ -52,7 +49,7 @@ class ImageBucketsAdapter (private var context: Context, var imageData:HashMap<S
         override fun onClick(view: View) = itemClickListener.onItemClick(itemView, imageData, listOfMonth[adapterPosition])
     }
 
-    //Create an listener interface for the items in the RecyclerView
+    //Create a listener interface for the items in the RecyclerView
     interface OnItemClickListener {
         fun onItemClick(view: View, imageMap: HashMap<String,List<File>>, monthCode: String)
     }
@@ -69,7 +66,7 @@ class ImageBucketsAdapter (private var context: Context, var imageData:HashMap<S
             }
         })
 
-        //sort list in the order of months starting with January ...
+        //sort list in the order of months starting with January
         listOfMonth.sortWith(MonthComparator)
     }
 }
